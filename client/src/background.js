@@ -1,5 +1,7 @@
 (function(){
 
+	var socket;
+
 	function main(){
 		var installationId = localStorage.getItem("installationId");
 		if(!installationId){
@@ -7,7 +9,7 @@
 			localStorage.setItem("installationId", installationId);
 		}
 
-		var socket = io.connect('http://10.4.4.251:8081');
+		socket = io.connect('http://10.4.4.251:8081');
 
 		socket.emit('online', { id: installationId });
 		reportTabs();
@@ -29,7 +31,11 @@
 			resolve = query;
 			query = {};
 		}
-		chrome.tabs.query(_.extend({ windowType: 'normal' }, query), resolve);
+		var DEFAULT_QUERY = { 
+			windowType: 'normal', //hide popups and web inspector
+			url: '*://*/*' //show http or https, hide chrome, ftp, and file
+		};
+		chrome.tabs.query(_.extend(DEFAULT_QUERY, query), resolve);
 	});
 
 	var addTab = function(url){

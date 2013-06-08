@@ -19,9 +19,6 @@ var Client = my.Class({
 	onOnline: function(opts){
 		_.extend(this, opts);
 		console.info("Client online: %s", this.id);
-
-		//TODO testing
-		this.addTab('http://www.rsaquo.net/');
 	},
 
 	onTabsList: function(tabs){
