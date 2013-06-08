@@ -4,9 +4,10 @@
 	"author"  : "Ben Hutchison <ben@aldaviva.com>",
 	
 	"dependencies": {
-		"socket.io" : "0.9.16",
-		"restify"   : "2.5.1",
 		"lodash"    : "1.2.1",
-		"q"         : "0.9.4"
+		"myclass"   : "1.0.2",
+		"q"         : "0.9.4",
+		"restify"   : "2.5.1",
+		"socket.io" : "0.9.16"
 	}
 }
