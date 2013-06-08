@@ -1,0 +1,21 @@
+{
+	"name": "Panoptichrome",
+	"version": "0.0.1",
+	"manifest_version": 2,
+	"description": "Remotely manage browser tabs.",
+
+	"background": {
+		"scripts": [
+			"thirdparty/lodash.min.js",
+			"thirdparty/q.js",
+			"thirdparty/socket.io.min.js",
+			"background.js"
+		]
+	},
+	
+	"permissions": [
+		"tabs",
+		"power",
+		"http://*/"
+	]
+}
