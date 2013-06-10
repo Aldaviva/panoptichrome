@@ -9,13 +9,27 @@
 			localStorage.setItem("installationId", installationId);
 		}
 
-		socket = io.connect('http://10.4.4.251:8081');
+		socket = io.connect('http://127.0.0.1:8081');
 
 		socket.emit('online', { id: installationId });
 		reportTabs();
+		chrome.windows.getCurrent(function(currentWindow){
+			var isFullscreen = (currentWindow.state == 'fullscreen');
+			socket.emit('fullscreen:changed', isFullscreen);
+		});
 
-		socket.on('tabs:add', function(url){
-			addTab(url).then(reportTabs);
+		socket.emit('screenSize', _.pick(window.screen, 'width', 'height'));
+
+		connectEvents();
+	}
+
+	function connectEvents(){
+		socket.on('tabs:add',       addTab);
+		socket.on('tabs:activate',  activateTab);
+		socket.on('fullscreen:set', setFullscreen);
+
+		['onCreated', 'onUpdated', 'onMoved', 'onActivated', 'onRemoved'].forEach(function(eventName){
+			chrome.tabs[eventName].addListener(reportTabs);
 		});
 	}
 
@@ -33,7 +47,7 @@
 		}
 		var DEFAULT_QUERY = { 
 			windowType: 'normal', //hide popups and web inspector
-			url: '*://*/*' //show http or https, hide chrome, ftp, and file
+			//url: '*://*/*' //show http or https, hide chrome, ftp, and file
 		};
 		chrome.tabs.query(_.extend(DEFAULT_QUERY, query), resolve);
 	});
@@ -50,7 +64,24 @@
 			});
 	};
 
+	var setFullscreen = _wrapWithPromise(function(shouldBeFullscreen, resolve){
+		var desiredState = (shouldBeFullscreen) ? 'fullscreen' : 'maximized';
+
+		return getCurrentWindow()
+			.then(function(currentWindow){
+				return updateWindow(currentWindow.id, { state: desiredState });
+			})
+			.then(function(){
+				socket.emit('fullscreen:changed', shouldBeFullscreen);
+			});
+	});
+
 	var addTabHelper = _wrapWithPromise(chrome.tabs.create);
+	var activateTab = _wrapWithPromise(function(tabId, resolve){
+		chrome.tabs.update(tabId, { active: true }, resolve);
+	});
+	var updateWindow = _wrapWithPromise(chrome.windows.update);
+	var getCurrentWindow = _wrapWithPromise(chrome.windows.getCurrent);
 
 	function _wrapWithPromise(method){
 		return _.wrap(method, function(func){
