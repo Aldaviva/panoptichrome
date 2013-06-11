@@ -1,15 +1,16 @@
-var _  = require('lodash');
-var my = require('myclass');
+var _            = require('lodash');
+var EventEmitter = require('events').EventEmitter;
+var my           = require('myclass');
 
-var Client = my.Class({
+var BrowserConnection = module.exports = my.Class(null, EventEmitter, {
 
 	constructor: function(socket){
 		_.bindAll(this);
-		this.socket = socket;
-		this.tabs = [];
+
+		this.socket           = socket;
+		this.address          = null;
+		this.browser          = null;
 		this.cycleTabInterval = null;
-		this.isFullscreen = null;
-		this.screenSize = null;
 
 		socket.on('disconnect',         this.destroy);
 		socket.on('online',             this.onOnline);
@@ -19,18 +20,27 @@ var Client = my.Class({
 	},
 
 	destroy: function(){
-		//TODO emit events to remove from collections, tell UI to remove from views?
+		this.browser && this.browser.trigger('connection:destroy');
+
 		this.cycleTabInterval && clearInterval(this.cycleTabInterval);
 		this.cycleTabInterval = null;
 	},
 
 	onOnline: function(opts){
-		_.extend(this, opts);
-		console.info("Client online from %s (id=%s)", this.socket.handshake.address.address, this.id);
+		this.clientOpts = opts;
+		this.address = this.socket.handshake.address.address;
+		console.info("Client online from %s (id=%s)", this.address, opts.id);
+
+		this.emit('change:id', this.id);
+	},
+
+	setBrowser: function(browser){
+		this.browser = browser;
+		browser.set(_.extend({ address: this.address }, this.clientOpts));
 	},
 
 	onTabsList: function(tabs){
-		this.tabs = tabs;
+		this.browser.set({ tabs: tabs });
 	},
 
 	addTab: function(url){
@@ -42,10 +52,12 @@ var Client = my.Class({
 	},
 
 	activateNextTab: function(){
-		var currentActiveTab = _.find(this.tabs, 'active');
+		var tabs = this.browser.get('tabs');
+
+		var currentActiveTab = _.find(tabs, 'active');
 		var currentActiveTabIndex = currentActiveTab ? currentActiveTab.index : -1;
-		var nextActiveTabIndex = (currentActiveTabIndex + 1) % this.tabs.length;
-		var nextActiveTab = _.find(this.tabs, { index: nextActiveTabIndex });
+		var nextActiveTabIndex = (currentActiveTabIndex + 1) % tabs.length;
+		var nextActiveTab = _.find(tabs, { index: nextActiveTabIndex });
 
 		this.activateTab(nextActiveTab);
 	},
@@ -55,14 +67,12 @@ var Client = my.Class({
 	},
 
 	onFullscreenChange: function(isFullscreen){
-		this.isFullscreen = isFullscreen;
+		this.browser.set({ isFullscreen: isFullscreen });
 		console.info("Client " + (isFullscreen ? "entered" : "left") + " fullscreen.");
 	},
 
 	onScreenSize: function(screenSize){
-		this.screenSize = screenSize;
+		this.browser.set({ screenSize: screenSize });
 		console.info("Client has a %d × %d display.", screenSize.width, screenSize.height);
 	}
 });
-
-module.exports = Client;

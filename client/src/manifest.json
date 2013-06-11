@@ -9,7 +9,7 @@
 			"thirdparty/lodash.min.js",
 			"thirdparty/q.js",
 			"thirdparty/socket.io.min.js",
-			"background.js"
+			"browserController.js"
 		]
 	},
 	

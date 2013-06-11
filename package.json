@@ -1,13 +1,15 @@
 {
-	"name"    : "panoptichrome-server",
+	"name"    : "panoptichrome",
 	"version" : "0.0.1",
 	"author"  : "Ben Hutchison <ben@aldaviva.com>",
 	
 	"dependencies": {
-		"lodash"    : "1.2.1",
-		"myclass"   : "1.0.2",
-		"q"         : "0.9.4",
-		"restify"   : "2.5.1",
-		"socket.io" : "0.9.16"
+		"backbone"       : "1.0.0",
+		"less-middleware": "0.1.12",
+		"lodash"         : "1.2.1",
+		"myclass"        : "1.0.2",
+		"q"              : "0.9.4",
+		"restify"        : "2.5.1",
+		"socket.io"      : "0.9.16"
 	}
 }
