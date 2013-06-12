@@ -1,6 +1,6 @@
 (function(){
 
-	var Backbone = Backbone || require('backbone');
+	var Backbone = this.Backbone || require('backbone');
 
 	var Browser = Backbone.Model.extend({
 

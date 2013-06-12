@@ -1,16 +1,22 @@
 (function(){
 
 	var socket;
+	var installationId;
 
 	function main(){
-		var installationId = localStorage.getItem("installationId");
+		installationId = localStorage.getItem("installationId");
 		if(!installationId){
 			installationId = generateUUID();
 			localStorage.setItem("installationId", installationId);
 		}
 
-		socket = io.connect('http://127.0.0.1:8081/browsers');
+		socket = io.connect('http://10.4.4.251:8081/browsers');
+		socket.on('connect', onConnection);
+		onConnection();
+		connectEvents();
+	}
 
+	function onConnection(){
 		socket.emit('online', { id: installationId });
 		reportTabs();
 		chrome.windows.getCurrent(function(currentWindow){
@@ -19,8 +25,6 @@
 		});
 
 		socket.emit('screenSize', _.pick(window.screen, 'width', 'height'));
-
-		connectEvents();
 	}
 
 	function connectEvents(){

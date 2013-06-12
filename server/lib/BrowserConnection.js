@@ -68,11 +68,9 @@ var BrowserConnection = module.exports = my.Class(null, EventEmitter, {
 
 	onFullscreenChange: function(isFullscreen){
 		this.browser.set({ isFullscreen: isFullscreen });
-		console.info("Client " + (isFullscreen ? "entered" : "left") + " fullscreen.");
 	},
 
 	onScreenSize: function(screenSize){
 		this.browser.set({ screenSize: screenSize });
-		console.info("Client has a %d × %d display.", screenSize.width, screenSize.height);
 	}
 });
