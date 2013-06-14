@@ -7,21 +7,38 @@
 		url: 'cgi-bin/browsers'
 	});
 
-	var socket = io.connect('http://10.4.4.251:8081/admins');
-
-	socket.on('connect', function(){});
-
-	socket.on('change:browser', function(modelAttributes){
-		browsers.get(modelAttributes.id).set(modelAttributes);
-	});
-
-	socket.on('add:browser', function(modelAttributes){
-		browsers.add(modelAttributes);
-	});
-
-	var tabsView = new TabsView({ collection: browsers });
-	$('#panoptichrome').append(tabsView.render());
-
+	connectAndListenOnSockets();
+	render();
 	browsers.fetch();
+
+
+
+	function connectAndListenOnSockets(){
+		var socketUrl = location.protocol+'//'+location.host+'/admins';
+		var socket = io.connect(socketUrl);
+
+		socket.on('connect', function(){});
+
+		socket.on('change:browser', function(modelAttributes){
+			var model = browsers.get(modelAttributes.id);
+			model.set(model.parse(modelAttributes));
+		});
+
+		socket.on('add:browser', function(modelAttributes){
+			browsers.add(modelAttributes, { parse: true });
+		});
+
+		socket.on('remove:browser', function(modelId){
+			browsers.remove(modelId);
+		});
+	}
+
+	function render(){
+		var browserListView = new BrowserListView({ collection: browsers });
+		$('#panoptichrome').append(browserListView.render());
+
+		var detailView = new DetailView();
+		$('#panoptichrome').append(detailView.render());	
+	}
 
 })();

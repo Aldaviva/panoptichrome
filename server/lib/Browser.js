@@ -1,4 +1,4 @@
-(function(){
+/*(function(){
 
 	var Backbone = this.Backbone || require('backbone');
 
@@ -16,4 +16,8 @@
 		window.Browser = Browser;
 	}
 
-})();
+})();*/
+
+var Backbone = require('backbone');
+
+module.exports = Backbone.Model.extend({});

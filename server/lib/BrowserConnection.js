@@ -20,7 +20,10 @@ var BrowserConnection = module.exports = my.Class(null, EventEmitter, {
 	},
 
 	destroy: function(){
-		this.browser && this.browser.trigger('connection:destroy');
+		if(this.browser){
+			this.browser.trigger('connection:destroy');
+			this.browser.collection && this.browser.collection.remove(this.browser);
+		}
 
 		this.cycleTabInterval && clearInterval(this.cycleTabInterval);
 		this.cycleTabInterval = null;
@@ -29,13 +32,14 @@ var BrowserConnection = module.exports = my.Class(null, EventEmitter, {
 	onOnline: function(opts){
 		this.clientOpts = opts;
 		this.address = this.socket.handshake.address.address;
-		console.info("Client online from %s (id=%s)", this.address, opts.id);
+		console.info("Client online from %s (id=%s).", this.address, opts.id);
 
 		this.emit('change:id', this.id);
 	},
 
-	setBrowser: function(browser){
+	bindBrowser: function(browser){
 		this.browser = browser;
+		browser.connection = this;
 		browser.set(_.extend({ address: this.address }, this.clientOpts));
 	},
 

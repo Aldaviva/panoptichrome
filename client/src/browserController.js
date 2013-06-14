@@ -12,12 +12,14 @@
 
 		socket = io.connect('http://10.4.4.251:8081/browsers');
 		socket.on('connect', onConnection);
-		onConnection();
 		connectEvents();
 	}
 
 	function onConnection(){
-		socket.emit('online', { id: installationId });
+		socket.emit('online', {
+			id: installationId,
+			name: localStorage.getItem("installationName") || "Untitled"
+		});
 		reportTabs();
 		chrome.windows.getCurrent(function(currentWindow){
 			var isFullscreen = (currentWindow.state == 'fullscreen');
@@ -31,6 +33,7 @@
 		socket.on('tabs:add',       addTab);
 		socket.on('tabs:activate',  activateTab);
 		socket.on('fullscreen:set', setFullscreen);
+		socket.on('name:set',       setName);
 
 		['onCreated', 'onUpdated', 'onMoved', 'onActivated', 'onRemoved'].forEach(function(eventName){
 			chrome.tabs[eventName].addListener(reportTabs);
@@ -79,6 +82,10 @@
 				socket.emit('fullscreen:changed', shouldBeFullscreen);
 			});
 	});
+
+	function setName(name){
+		localStorage.setItem("installationName", name);
+	}
 
 	var addTabHelper = _wrapWithPromise(chrome.tabs.create);
 	var activateTab = _wrapWithPromise(function(tabId, resolve){
