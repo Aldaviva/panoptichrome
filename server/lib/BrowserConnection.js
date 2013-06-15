@@ -22,7 +22,7 @@ var BrowserConnection = module.exports = my.Class(null, EventEmitter, {
 	destroy: function(){
 		if(this.browser){
 			this.browser.trigger('connection:destroy');
-			this.browser.collection && this.browser.collection.remove(this.browser);
+			// this.browser.collection && this.browser.collection.remove(this.browser);
 		}
 
 		this.cycleTabInterval && clearInterval(this.cycleTabInterval);
@@ -41,6 +41,28 @@ var BrowserConnection = module.exports = my.Class(null, EventEmitter, {
 		this.browser = browser;
 		browser.connection = this;
 		browser.set(_.extend({ address: this.address }, this.clientOpts));
+
+		//these might get weird if the client reconnects and double-registers these callbacks. maybe we should use Events.listenTo() and Events.stopListening() instead.
+
+		browser.on("change:isFullscreen", _.bind(function(model, val, opts){
+			!opts.fromClient && this.setFullscreen(val);
+		}, this));
+
+		browser.on("change:name", _.bind(function(model, val){
+			this.setName(val);
+		}, this));
+
+		browser.on("change:isFullscreen", _.bind(function(model, val){
+			this.setFullscreen(val);
+		}, this));
+
+		browser.on("change:isCyclePaused", _.bind(function(model, val){
+			this.setCyclePaused(val);
+		}, this));
+
+		browser.on("change:cycleTabDuration", _.bind(function(model, val){
+			this.setCycleTabDuration(val);
+		}, this));
 	},
 
 	onTabsList: function(tabs){
@@ -55,26 +77,27 @@ var BrowserConnection = module.exports = my.Class(null, EventEmitter, {
 		this.socket.emit('tabs:activate', tab.id);
 	},
 
-	activateNextTab: function(){
-		var tabs = this.browser.get('tabs');
-
-		var currentActiveTab = _.find(tabs, 'active');
-		var currentActiveTabIndex = currentActiveTab ? currentActiveTab.index : -1;
-		var nextActiveTabIndex = (currentActiveTabIndex + 1) % tabs.length;
-		var nextActiveTab = _.find(tabs, { index: nextActiveTabIndex });
-
-		this.activateTab(nextActiveTab);
-	},
-
 	setFullscreen: function(shouldBeFullscreen){
 		this.socket.emit('fullscreen:set', shouldBeFullscreen);
 	},
 
 	onFullscreenChange: function(isFullscreen){
-		this.browser.set({ isFullscreen: isFullscreen });
+		this.browser.set({ isFullscreen: isFullscreen }, { fromClient: true });
 	},
 
 	onScreenSize: function(screenSize){
 		this.browser.set({ screenSize: screenSize });
+	},
+
+	setName: function(name){
+		this.socket.emit('name:set', name);
+	},
+
+	setCyclePaused: function(isPaused){
+		this.socket.emit("cycle:ispaused:set", isPaused);
+	},
+
+	setCycleTabDuration: function(durationMillis){
+		this.socket.emit("cycle:tabduration:set", durationMillis);
 	}
 });

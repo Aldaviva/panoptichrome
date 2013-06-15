@@ -27,13 +27,7 @@
 				delete rawAttrs.tabs;
 			}
 			return rawAttrs;
-		},
-
-		set: function(){
-			Backbone.Model.prototype.set.apply(this, arguments);
 		}
 	});
-
-	// window.Browser.foo = 'bar';
 
 })();

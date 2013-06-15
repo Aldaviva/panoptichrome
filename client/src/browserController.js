@@ -1,10 +1,10 @@
 (function(){
 
 	var socket;
-	var installationId;
+	var cycleIntervalId;
 
 	function main(){
-		installationId = localStorage.getItem("installationId");
+		var installationId = localStorage.getItem("installationId");
 		if(!installationId){
 			installationId = generateUUID();
 			localStorage.setItem("installationId", installationId);
@@ -13,32 +13,41 @@
 		socket = io.connect('http://10.4.4.251:8081/browsers');
 		socket.on('connect', onConnection);
 		connectEvents();
+
+		setIsCyclePaused(isCyclePaused()); //restart timers
 	}
 
 	function onConnection(){
-		socket.emit('online', {
-			id: installationId,
-			name: localStorage.getItem("installationName") || "Untitled"
-		});
-		reportTabs();
-		chrome.windows.getCurrent(function(currentWindow){
-			var isFullscreen = (currentWindow.state == 'fullscreen');
-			socket.emit('fullscreen:changed', isFullscreen);
-		});
+		Q.all([getTabs(), getCurrentWindow()])
+			.spread(function(tabs, currentWindow){
+				socket.emit('online', {
+					id: localStorage.getItem("installationId"),
+					name: localStorage.getItem("installationName") || "Untitled",
+					isFullscreen: (currentWindow.state == 'fullscreen'),
+					screenSize: _.pick(window.screen, 'width', 'height'),
+					tabs: tabs,
+					isCyclePaused: isCyclePaused(),
+					cycleTabDuration: getCycleTabDuration()
+				});
+			});
 
-		socket.emit('screenSize', _.pick(window.screen, 'width', 'height'));
+		registerChromeTabListeners();
 	}
 
 	function connectEvents(){
-		socket.on('tabs:add',       addTab);
-		socket.on('tabs:activate',  activateTab);
-		socket.on('fullscreen:set', setFullscreen);
-		socket.on('name:set',       setName);
+		socket.on('tabs:add',              addTab);
+		socket.on('tabs:activate',         activateTab);
+		socket.on('fullscreen:set',        setFullscreen);
+		socket.on('name:set',              setName);
+		socket.on('cycle:tabduration:set', setCycleTabDuration);
+		socket.on('cycle:ispaused:set',    setIsCyclePaused);
+	}
 
+	var registerChromeTabListeners = _.once(function(){
 		['onCreated', 'onUpdated', 'onMoved', 'onActivated', 'onRemoved'].forEach(function(eventName){
 			chrome.tabs[eventName].addListener(reportTabs);
 		});
-	}
+	});
 
 	function reportTabs(){
 		getTabs()
@@ -72,19 +81,65 @@
 	};
 
 	var setFullscreen = _wrapWithPromise(function(shouldBeFullscreen, resolve){
-		var desiredState = (shouldBeFullscreen) ? 'fullscreen' : 'maximized';
+		console.log((shouldBeFullscreen ? 'enabling' : 'disabling') + 'fullscreen');
+		var desiredState = (shouldBeFullscreen) ? 'fullscreen' : 'normal';
 
 		return getCurrentWindow()
 			.then(function(currentWindow){
 				return updateWindow(currentWindow.id, { state: desiredState });
 			})
-			.then(function(){
+			/*.then(function(){
 				socket.emit('fullscreen:changed', shouldBeFullscreen);
-			});
+			})*/;
 	});
 
 	function setName(name){
 		localStorage.setItem("installationName", name);
+	}
+
+	function isCyclePaused(){
+		var serialized = localStorage.getItem('isCyclePaused');
+		if(serialized !== null){
+			return JSON.parse(serialized);
+		} else {
+			return false;
+		}
+	}
+
+	function getCycleTabDuration(){
+		var serialized = localStorage.getItem("cycleTabDuration");
+		if(serialized !== null){
+			return parseInt(serialized, 10);
+		} else {
+			return 3*1000;
+		}
+	}
+
+	function setCycleTabDuration(duration){
+		localStorage.setItem("cycleTabDuration", duration);
+
+		if(cycleIntervalId){
+			clearInterval(cycleIntervalId);
+			startCycling();
+		}
+	}
+
+	function setIsCyclePaused(shouldBePaused){
+		localStorage.setItem("isCyclePaused", shouldBePaused);
+
+		var wasPaused = !cycleIntervalId;
+		if(shouldBePaused && !wasPaused){
+			clearInterval(cycleIntervalId);
+			cycleIntervalId = null;
+		} else if(!shouldBePaused && wasPaused){
+			startCycling();
+		}
+	}
+
+	function startCycling(){
+		var intervalMillis = getCycleTabDuration();
+		cycleIntervalId = setInterval(activateNextTab, intervalMillis);
+		activateNextTab();
 	}
 
 	var addTabHelper = _wrapWithPromise(chrome.tabs.create);
@@ -92,7 +147,26 @@
 		chrome.tabs.update(tabId, { active: true }, resolve);
 	});
 	var updateWindow = _wrapWithPromise(chrome.windows.update);
-	var getCurrentWindow = _wrapWithPromise(chrome.windows.getCurrent);
+	var getCurrentWindow = _wrapWithPromise(_.partial(chrome.windows.getCurrent, { populate: true }));
+	var getActiveTab = function(){
+		return getTabs({ active: true }).get(0);
+	};
+
+	var activateNextTab = function(){
+		Q
+			.all([
+				getActiveTab().get("index"),
+				getCurrentWindow().get('tabs').get('length')
+			])
+			.spread(function(currentTabIndex, numTabs){
+				var nextIndex = (currentTabIndex + 1) % numTabs;
+				return getTabs({ index: nextIndex });
+			})
+			.get(0)
+			.get("id")
+			.then(activateTab)
+			.done();
+	};
 
 	function _wrapWithPromise(method){
 		return _.wrap(method, function(func){
