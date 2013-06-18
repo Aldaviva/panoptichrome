@@ -31,6 +31,11 @@
 		socket.on('remove:browser', function(modelId){
 			browsers.remove(modelId);
 		});
+
+		socket.on('change:screenshot', function(browserId){
+			var browser = browsers.get(browserId);
+			mediator.publish('change:screenshot:'+browserId, browser);
+		});
 	}
 
 	function render(){

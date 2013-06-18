@@ -6,6 +6,8 @@ var browsers          = require('./browsers');
 
 var API_ROOT = '/cgi-bin/';
 
+var screenshots = {};
+
 var browserSockets = apiServer.io.of('/browsers');
 var adminSockets = apiServer.io.of('/admins');
 
@@ -27,6 +29,17 @@ apiServer.patch({ path: API_ROOT+'browsers/:browserId', name: 'patchBrowser' }, 
 	res.send(200);
 });
 
+apiServer.get({ path: API_ROOT+'browsers/:browserId/screenshot.png', name: 'getScreenshot' }, function(req, res){
+	var browserId = req.params.browserId;
+	var screenshot = screenshots[browserId];
+	if(screenshot){
+		res.header('Content-Type', 'image/png');
+		res.end(screenshot, 'base64');
+	} else {
+		res.send(404, "No screenshot for "+browserId);
+	}
+});
+
 
 browserSockets.on('connection', function(socket){
 	var browserConnection = new BrowserConnection(socket);
@@ -39,7 +52,16 @@ browserSockets.on('connection', function(socket){
 		}
 
 		browserConnection.bindBrowser(browser);
+
+		socket.on("screenshot", function(dataUri){
+			var stripped = dataUri.replace(/^data:image\/png;base64,/, '');
+			var decoded = new Buffer(stripped, 'base64');
+			screenshots[browser.id] = decoded;
+			console.log("received screenshot from "+browser.id+" (length = "+dataUri.length+")");
+			adminSockets.emit("change:screenshot", browser.id);
+		});
 	});
+
 });
 
 browsers

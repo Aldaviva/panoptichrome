@@ -54,6 +54,28 @@
 			.then(function(tabs){
 				socket.emit('tabs:list', tabs);
 			});
+
+
+		captureVisibleTab()
+			.then(function(dataUri){
+				// console.log("captured a dataUri of length "+dataUri.length);
+				if(!dataUri){
+					throw "Invalid screenshot";
+				} else {
+					return dataUri;
+				}
+			})
+			// .then(resampleScreenshot)
+			.then(function(dataUri){
+				// console.log('uploading datauri of length '+dataUri.length)
+				socket.emit('screenshot', dataUri);
+				// console.info("uploaded screenshot");
+			})
+			.fail(function(err){
+				err && console.error(err);
+				console.log("missing screenshot, ignoring");
+				//invalid screenshot, ignore
+			});
 	}
 
 	var getTabs = _wrapWithPromise(function(query, resolve){
@@ -151,6 +173,7 @@
 	var getActiveTab = function(){
 		return getTabs({ active: true }).get(0);
 	};
+	var captureVisibleTab = _wrapWithPromise(_.partial(chrome.tabs.captureVisibleTab, { format: 'png' }));
 
 	var activateNextTab = function(){
 		Q
@@ -167,6 +190,58 @@
 			.then(activateTab)
 			.done();
 	};
+
+	function getTabDimensions(){
+		var originalSizeDeferred = Q.defer();
+
+		chrome.tabs.executeScript(null, { code: "[window.innerWidth, window.innerHeight]" }, function(originalSize){
+			console.log("originalSize from injected script: ", originalSize);
+			originalSizeDeferred.resolve(originalSize[0]);
+		});
+
+		return originalSizeDeferred.promise;
+	}
+
+	function resampleScreenshot(dataUri){
+		var LONGEST_EDGE_SIZE = 200;
+
+		var resultHeight;
+		var resultWidth;
+
+		return getTabDimensions().then(function(originalSize){
+			var originalWidth = originalSize[0];
+			var originalHeight = originalSize[1];
+			console.log("original image is "+originalWidth+' x '+originalHeight);
+
+			if(originalHeight > originalWidth){
+				resultHeight = LONGEST_EDGE_SIZE;
+				resultWidth = Math.round(LONGEST_EDGE_SIZE / originalHeight * originalWidth);
+			} else {
+				resultHeight = Math.round(LONGEST_EDGE_SIZE / originalWidth * originalHeight);
+				resultWidth = LONGEST_EDGE_SIZE;
+			}
+
+			var originalImage = document.createElement("image");
+			originalImage.src = dataUri;
+			console.log('image src length = '+originalImage.src.length);
+
+			var canvas = document.createElement("canvas");
+			canvas.width = resultWidth;
+			canvas.height = resultHeight;
+			console.log("creating screenshot thumbnail of size "+resultWidth+" x "+resultHeight);
+			var canvasContext = canvas.getContext("2d");
+
+			canvasContext.drawImage(originalImage, 0, 0, resultWidth, resultHeight);
+			// canvas.width = resultWidth;
+			// canvas.height = resultHeight;
+
+			var resampled = canvas.toDataURL("image/png");
+			console.log('resampled into a datauri of length '+resampled.length);
+			return resampled;
+		});
+
+		
+	}
 
 	function _wrapWithPromise(method){
 		return _.wrap(method, function(func){

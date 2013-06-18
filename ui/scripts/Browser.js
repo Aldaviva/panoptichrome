@@ -18,6 +18,10 @@
 			tabsCollection.set(newVal);
 		},
 
+		generateScreenshotUrl: function(){
+			return 'cgi-bin/browsers/'+this.id+'/screenshot.png?'+(+new Date());
+		},
+
 		/*
 		 * Rename tabs to rawTabs so we can assign a Collection to tabs.
 		 */

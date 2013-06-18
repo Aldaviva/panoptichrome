@@ -54,19 +54,26 @@
 			_.bindAll(this);
 
 			this.model.on('change', this.render);
+			mediator.subscribe('change:screenshot:'+this.model.id, this.renderScreenshot);
 		},
 
 		render: function(){
 			if(!this.el.childElementCount){
 				this.$el
 					.append($('<div>').addClass('icon'))
-					.append($('<div>').addClass('screenshot'))
+					.append($('<img>').addClass('screenshot'))
 					.append($('<div>').addClass('name'));
 			}
 
 			this.$('.name').text(this.model.get('name'));
+			this.renderScreenshot();
 
 			return this.el;
+		},
+
+		renderScreenshot: function(){
+			var img = this.$('.screenshot');
+			img.attr('src', this.model.generateScreenshotUrl());
 		},
 
 		focus: function(){
