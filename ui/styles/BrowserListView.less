@@ -1,0 +1,113 @@
+.BrowserListView {
+	@height: 125px;
+	height        : @height; //to clip bottom shadow
+	overflow      : hidden;
+	padding-right : @browserlistview_border_radius;
+
+	.BrowserListItemView {
+		@icon_size: 54px;
+
+		cursor         : pointer;
+		display        : inline-block;
+		height         : @height - (2 * @browserlistview_border_radius);
+		margin-right   : 3px;
+		min-width      : 109px;
+		opacity        : 0.6;
+		padding        : @browserlistview_border_radius 0 @browserlistview_border_radius;
+		vertical-align : bottom;
+
+		//this is for the mac mini sprite, should allow overrides for different monitor sprites
+		.icon {
+			background-repeat : none;
+			height            : @icon_size;
+			margin            : 0 auto;
+			position          : relative;
+			width             : @icon_size;
+
+			.screenshot { 
+				position: absolute;
+			}
+
+			&.macmini {
+				background-image: url('../images/installation-macmini.png');
+
+				.screenshot {
+					height : 44px;
+					left   : 7px;
+					top    : 3px;
+					width  : 25px;
+				}
+			}
+
+			&.browser_08d9ff04-07b4-4cee-aee7-dc324dee93d4 {
+				background-image: url('../images/installation-forseti.png');
+
+				.screenshot {
+					height : 44px;
+					left   : 26px;
+					top    : 3px;
+					width  : 25px;
+				}
+			}
+
+			&.browser_892c72ea-53bc-4f87-8036-3da57edbf97d {
+				background-image: url('../images/installation-acer.png');
+
+				.screenshot {
+					height : 21px;
+					left   : 10px;
+					top    : 25px;
+					width  : 35px;
+				}
+			}
+		}
+
+		.name {
+			color       : black;
+			font-size   : 12px;
+			font-weight : bold;
+			padding-top : 16px;
+			text-align  : center;
+		}
+
+		&:hover {
+			opacity: 0.8;
+		}
+
+		&.focused {
+			opacity: 1;
+		}
+
+		&.focused {
+			.box-shadow(0, 0, 4px, rgba(0,0,0,0.20));
+			background-color        : @detailview_background_color;
+			border-top-left-radius  : @browserlistview_border_radius;
+			border-top-right-radius : @browserlistview_border_radius;
+			cursor: default;
+		}
+
+		&.addBrowserLink {
+			/*opacity: 0.8;*/
+			margin-left: 3px;
+
+			.icon {
+				@height      : @icon_size / 16 * 9;
+
+				.border-radius(5px);
+				border        : 2px dashed rgba(0,0,0,0.67);
+				font-size     : 30px;
+				font-weight   : bold;
+				height        : @height;
+				line-height   : @height * .85;
+				margin-top    : ((@icon_size - @height) / 2);
+				margin-bottom : ((@icon_size - @height) / 2);
+				opacity       : 0.4;
+				text-align    : center;
+			}
+
+			.name {
+				/*opacity: 0.6;*/
+			}
+		}
+	}
+}

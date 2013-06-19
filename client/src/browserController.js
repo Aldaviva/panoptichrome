@@ -29,6 +29,8 @@
 					isCyclePaused: isCyclePaused(),
 					cycleTabDuration: getCycleTabDuration()
 				});
+
+				uploadScreenshot();
 			});
 
 		registerChromeTabListeners();
@@ -44,7 +46,7 @@
 	}
 
 	var registerChromeTabListeners = _.once(function(){
-		['onCreated', 'onUpdated', 'onMoved', 'onActivated', 'onRemoved'].forEach(function(eventName){
+		['onCreated', 'onUpdated', 'onMoved', 'onActivated', 'onRemoved', 'onReplaced'].forEach(function(eventName){
 			chrome.tabs[eventName].addListener(reportTabs);
 		});
 	});
@@ -55,7 +57,10 @@
 				socket.emit('tabs:list', tabs);
 			});
 
+		uploadScreenshot();
+	}
 
+	function uploadScreenshot(){
 		captureVisibleTab()
 			.then(function(dataUri){
 				// console.log("captured a dataUri of length "+dataUri.length);
@@ -124,7 +129,7 @@
 		if(serialized !== null){
 			return JSON.parse(serialized);
 		} else {
-			return false;
+			return true;
 		}
 	}
 

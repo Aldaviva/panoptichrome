@@ -1,0 +1,19 @@
+.DetailView {
+	.border-radius(@browserlistview_border_radius);
+	.box-shadow(0, 0, 4px, rgba(0,0,0,0.2));
+	background-color : @detailview_background_color;
+	padding          : @detailview_spacing;
+
+	> .title {
+
+	}
+
+	> .tabs {
+		margin-right: @buttons_width + @detailview_spacing;
+	}
+
+	> .buttons {
+		float : right;
+		width : @buttons_width;
+	}
+}

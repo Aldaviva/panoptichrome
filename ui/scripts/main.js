@@ -11,7 +11,9 @@
 	render();
 	browsers.fetch();
 
-
+	browsers.once('add', function(model){
+		mediator.publish('browserListItem:focus', model);
+	});
 
 	function connectAndListenOnSockets(){
 		var socketUrl = location.protocol+'//'+location.host+'/admins';

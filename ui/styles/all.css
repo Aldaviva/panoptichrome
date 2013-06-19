@@ -1,0 +1,251 @@
+/*
+YUI 2: Reset CSS
+Copyright (c) 2011, Yahoo! Inc. All rights reserved.
+Code licensed under the BSD License:
+http://developer.yahoo.com/yui/license.html
+version: 2.9.0
+*/
+body,
+div,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+pre,
+code,
+form,
+fieldset,
+legend,
+input,
+button,
+textarea,
+select,
+p,
+blockquote,
+th,
+td {
+  margin: 0;
+  padding: 0;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+fieldset,
+img {
+  border: 0;
+}
+address,
+button,
+caption,
+cite,
+code,
+dfn,
+em,
+input,
+optgroup,
+option,
+select,
+strong,
+textarea,
+th,
+var {
+  font: inherit;
+}
+del,
+ins {
+  text-decoration: none;
+}
+li {
+  list-style: none;
+}
+caption,
+th {
+  text-align: left;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: 100%;
+  font-weight: normal;
+}
+q:before,
+q:after {
+  content: '';
+}
+abbr,
+acronym {
+  border: 0;
+  font-variant: normal;
+}
+sup {
+  vertical-align: baseline;
+}
+sub {
+  vertical-align: baseline;
+}
+legend {
+  color: #000000;
+}
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
+}
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+textarea:focus,
+input:focus {
+  outline: none;
+}
+body {
+  background-color: #c0c0c0;
+}
+#panoptichrome {
+  border-radius: 20px;
+  -moz-border-radius: 20px;
+  -webkit-border-radius: 20px;
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.2);
+  background-color: #e3e3e3;
+  border: 1px solid #949494;
+  margin: 50px auto;
+  max-width: 890px;
+}
+.BrowserListView {
+  height: 125px;
+  overflow: hidden;
+  padding-right: 20px;
+}
+.BrowserListView .BrowserListItemView {
+  cursor: pointer;
+  display: inline-block;
+  height: 85px;
+  margin-right: 3px;
+  min-width: 109px;
+  opacity: 0.6;
+  padding: 20px 0 20px;
+  vertical-align: bottom;
+}
+.BrowserListView .BrowserListItemView .icon {
+  background-repeat: none;
+  height: 54px;
+  margin: 0 auto;
+  position: relative;
+  width: 54px;
+}
+.BrowserListView .BrowserListItemView .icon .screenshot {
+  position: absolute;
+}
+.BrowserListView .BrowserListItemView .icon.macmini {
+  background-image: url('../images/installation-macmini.png');
+}
+.BrowserListView .BrowserListItemView .icon.macmini .screenshot {
+  height: 44px;
+  left: 7px;
+  top: 3px;
+  width: 25px;
+}
+.BrowserListView .BrowserListItemView .icon.browser_08d9ff04-07b4-4cee-aee7-dc324dee93d4 {
+  background-image: url('../images/installation-forseti.png');
+}
+.BrowserListView .BrowserListItemView .icon.browser_08d9ff04-07b4-4cee-aee7-dc324dee93d4 .screenshot {
+  height: 44px;
+  left: 26px;
+  top: 3px;
+  width: 25px;
+}
+.BrowserListView .BrowserListItemView .icon.browser_892c72ea-53bc-4f87-8036-3da57edbf97d {
+  background-image: url('../images/installation-acer.png');
+}
+.BrowserListView .BrowserListItemView .icon.browser_892c72ea-53bc-4f87-8036-3da57edbf97d .screenshot {
+  height: 21px;
+  left: 10px;
+  top: 25px;
+  width: 35px;
+}
+.BrowserListView .BrowserListItemView .name {
+  color: black;
+  font-size: 12px;
+  font-weight: bold;
+  padding-top: 16px;
+  text-align: center;
+}
+.BrowserListView .BrowserListItemView:hover {
+  opacity: 0.8;
+}
+.BrowserListView .BrowserListItemView.focused {
+  opacity: 1;
+}
+.BrowserListView .BrowserListItemView.focused {
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+  background-color: #fafafa;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  cursor: default;
+}
+.BrowserListView .BrowserListItemView.addBrowserLink {
+  /*opacity: 0.8;*/
+
+  margin-left: 3px;
+}
+.BrowserListView .BrowserListItemView.addBrowserLink .icon {
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border: 2px dashed rgba(0, 0, 0, 0.67);
+  font-size: 30px;
+  font-weight: bold;
+  height: 30.375px;
+  line-height: 25.818749999999998px;
+  margin-top: 11.8125px;
+  margin-bottom: 11.8125px;
+  opacity: 0.4;
+  text-align: center;
+}
+.BrowserListView .BrowserListItemView.addBrowserLink .name {
+  /*opacity: 0.6;*/
+
+}
+.DetailView {
+  border-radius: 20px;
+  -moz-border-radius: 20px;
+  -webkit-border-radius: 20px;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+  background-color: #fafafa;
+  padding: 39px;
+}
+.DetailView > .tabs {
+  margin-right: 221px;
+}
+.DetailView > .buttons {
+  float: right;
+  width: 182px;
+}

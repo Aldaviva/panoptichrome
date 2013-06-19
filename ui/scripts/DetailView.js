@@ -5,6 +5,8 @@
 
 	window.DetailView = Backbone.View.extend({
 
+		className: 'DetailView',
+
 		events: {
 			"blur .name"                 : "onNameBlur",
 			"keyup .name"                : "onNameKeyUp",
@@ -32,7 +34,6 @@
 							.append($('<div>', { class: 'address' })));
 
 					var tabListView = new TabListView({ collection: this.model.get('tabs') });
-					this.$el.append(tabListView.render());
 
 					this.$el.append($('<div>', { class: 'buttons' })
 						.append($('<div>', { class: 'cycle' })
@@ -58,6 +59,8 @@
 									class: 'fullscreenDisabled',
 									html: '<strong>Fullscreen</strong> disabled'
 								})))));
+
+					this.$el.append(tabListView.render());
 				}
 
 				this.renderTitle();
