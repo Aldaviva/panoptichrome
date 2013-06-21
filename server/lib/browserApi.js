@@ -3,6 +3,7 @@ var apiServer         = require('./apiServer');
 var Browser           = require('./Browser');
 var BrowserConnection = require('./BrowserConnection');
 var browsers          = require('./browsers');
+var util              = require('util');
 
 var API_ROOT = '/cgi-bin/';
 
@@ -29,11 +30,86 @@ apiServer.patch({ path: API_ROOT+'browsers/:browserId', name: 'patchBrowser' }, 
 	res.send(200);
 });
 
-apiServer.get({ path: API_ROOT+'browsers/:browserId/screenshot.png', name: 'getScreenshot' }, function(req, res){
+apiServer.get({ path: API_ROOT+'browsers/:browserId/tabs', name: 'getTabs' }, function(req, res){
+	var browserId = req.params.browserId;
+	var browser = browsers.get(browserId);
+	if(browser){
+		res.send(browser.tabs.toJSON());
+	} else {
+		res.send(404, "No browsers found with id = "+browserId);
+	}
+});
+
+apiServer.post({ path: API_ROOT+'browsers/:browserId/tabs', name: 'addTab' }, function(req, res){
+	var browserId = req.params.browserId;
+	var browser = browsers.get(browserId);
+
+	if(browser){
+		var tabAttributes = { url: req.body.url };
+		browser.tabs.add(tabAttributes);
+		res.send(200);
+	} else {
+		res.send(404, "No browsers found with id = "+browserId);
+	}
+});
+
+apiServer.get({ path: API_ROOT+'browsers/:browserId/tabs/:tabId', name: 'getTab' }, function(req, res){
+	var browserId = req.params.browserId;
+	var tabId = req.params.tabId;
+	var browser = browsers.get(browserId);
+	if(browser){
+		var tab = browser.tabs.get(tabId);
+		if(tab){
+			res.send(tab.toJSON());
+		} else {
+			res.send(404, "Browser does not have a tab with id = " + tabId);
+		}
+	} else {
+		res.send(404, "No browsers found with id = "+browserId);
+	}
+});
+
+apiServer.del({ path: API_ROOT+'browsers/:browserId/tabs/:tabId', name: 'removeTab' }, function(req, res){
+	var browserId = req.params.browserId;
+	var tabId = req.params.tabId;
+
+	var browser = browsers.get(browserId);
+	if(browser){
+		browser.tabs.remove(tabId);
+		res.send(200);
+	} else {
+		res.send(404, "No browsers found with id = "+browserId);
+	}
+});
+
+apiServer.put({ path: API_ROOT+'browsers/:browserId/tabs/:tabId/reload', name: 'reloadTab' }, function(req, res){
+	try {
+		var browserId = req.params.browserId;
+		var tabId = req.params.tabId;
+
+		var browser = browsers.get(browserId);
+		if(browser){
+			var tab = browser.tabs.get(tabId);
+			if(tab){
+				tab.trigger('reload', tab, browser.tabs, {});
+				res.send(204);
+			} else {
+				res.send(404, "Browser does not have a tab with id = " + tabId);
+			}
+		} else {
+			res.send(404, "No browsers found with id = "+browserId);
+		}
+	} catch (e){
+		console.error("error in handler", util.inspect(e, { showHidden: true }));
+		console.error(e.stack);
+	}
+});
+
+apiServer.get({ path: API_ROOT+'browsers/:browserId/screenshot.jpg', name: 'getScreenshot' }, function(req, res){
 	var browserId = req.params.browserId;
 	var screenshot = screenshots[browserId];
 	if(screenshot){
-		res.header('Content-Type', 'image/png');
+		res.header('Content-Type', 'image/jpeg');
 		res.end(screenshot, 'base64');
 	} else {
 		res.send(404, "No screenshot for "+browserId);
@@ -54,10 +130,9 @@ browserSockets.on('connection', function(socket){
 		browserConnection.bindBrowser(browser);
 
 		socket.on("screenshot", function(dataUri){
-			var stripped = dataUri.replace(/^data:image\/png;base64,/, '');
+			var stripped = dataUri.replace(/^data:image\/jpeg;base64,/, '');
 			var decoded = new Buffer(stripped, 'base64');
 			screenshots[browser.id] = decoded;
-			console.log("received screenshot from "+browser.id+" (length = "+dataUri.length+")");
 			adminSockets.emit("change:screenshot", browser.id);
 		});
 	});

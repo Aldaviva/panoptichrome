@@ -33,7 +33,7 @@
 							.append($('<input>', { class: 'name', attr: { type: 'text' }}))
 							.append($('<div>', { class: 'address' })));
 
-					var tabListView = new TabListView({ collection: this.model.get('tabs') });
+					var tabListView = new TabListView({ collection: this.model.tabs });
 
 					this.$el.append($('<div>', { class: 'buttons' })
 						.append($('<div>', { class: 'cycle' })

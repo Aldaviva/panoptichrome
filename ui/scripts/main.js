@@ -9,7 +9,11 @@
 
 	connectAndListenOnSockets();
 	render();
-	browsers.fetch();
+	browsers.fetch(function(){
+		browsers.each(function(browser){
+			browser.tabs.fetch();
+		});
+	});
 
 	browsers.once('add', function(model){
 		mediator.publish('browserListItem:focus', model);

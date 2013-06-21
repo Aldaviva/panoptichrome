@@ -15,6 +15,7 @@
 		connectEvents();
 
 		setIsCyclePaused(isCyclePaused()); //restart timers
+		setInterval(uploadScreenshot, 5000);
 	}
 
 	function onConnection(){
@@ -31,6 +32,7 @@
 				});
 
 				uploadScreenshot();
+				
 			});
 
 		registerChromeTabListeners();
@@ -39,6 +41,8 @@
 	function connectEvents(){
 		socket.on('tabs:add',              addTab);
 		socket.on('tabs:activate',         activateTab);
+		socket.on('tabs:remove',           removeTab);
+		socket.on('tabs:reload',           reloadTab);
 		socket.on('fullscreen:set',        setFullscreen);
 		socket.on('name:set',              setName);
 		socket.on('cycle:tabduration:set', setCycleTabDuration);
@@ -174,15 +178,19 @@
 		chrome.tabs.update(tabId, { active: true }, resolve);
 	});
 	var updateWindow = _wrapWithPromise(chrome.windows.update);
+	var updateTab = _wrapWithPromise(chrome.tabs.update);
+	var removeTab = _wrapWithPromise(chrome.tabs.remove);
+	var reloadTab = _wrapWithPromise(function(tabId, resolve){
+		chrome.tabs.reload(tabId, { bypassCache: true }, resolve);
+	});
 	var getCurrentWindow = _wrapWithPromise(_.partial(chrome.windows.getCurrent, { populate: true }));
 	var getActiveTab = function(){
 		return getTabs({ active: true }).get(0);
 	};
-	var captureVisibleTab = _wrapWithPromise(_.partial(chrome.tabs.captureVisibleTab, { format: 'png' }));
+	var captureVisibleTab = _wrapWithPromise(_.partial(chrome.tabs.captureVisibleTab, { format: 'jpeg', quality: 10 }));
 
 	var activateNextTab = function(){
-		Q
-			.all([
+		Q.all([
 				getActiveTab().get("index"),
 				getCurrentWindow().get('tabs').get('length')
 			])
@@ -244,8 +252,6 @@
 			console.log('resampled into a datauri of length '+resampled.length);
 			return resampled;
 		});
-
-		
 	}
 
 	function _wrapWithPromise(method){

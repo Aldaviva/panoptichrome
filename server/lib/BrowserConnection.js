@@ -30,7 +30,7 @@ var BrowserConnection = module.exports = my.Class(null, EventEmitter, {
 	},
 
 	onOnline: function(opts){
-		this.clientOpts = opts;
+		this._clientOpts = opts;
 		this.address = this.socket.handshake.address.address;
 		console.info("Client online from %s (id=%s).", this.address, opts.id);
 
@@ -40,7 +40,9 @@ var BrowserConnection = module.exports = my.Class(null, EventEmitter, {
 	bindBrowser: function(browser){
 		this.browser = browser;
 		browser.connection = this;
-		browser.set(_.extend({ address: this.address }, this.clientOpts));
+		browser.tabs.reset(this._clientOpts.tabs);
+		browser.set(_.extend({ address: this.address }, _.omit(this._clientOpts, 'tabs')));
+		delete this._clientOpts;
 
 		//these might get weird if the client reconnects and double-registers these callbacks. maybe we should use Events.listenTo() and Events.stopListening() instead.
 
@@ -63,10 +65,27 @@ var BrowserConnection = module.exports = my.Class(null, EventEmitter, {
 		browser.on("change:cycleTabDuration", _.bind(function(model, val){
 			this.setCycleTabDuration(val);
 		}, this));
+
+		browser.tabs.on("remove", _.bind(function(model){
+			this.removeTab(model.id);
+		}, this));
+
+		browser.tabs.on("add", _.bind(function(model, coll){
+			/*
+			 * Tab model doesn't have an ID yet, so we won't be able to merge it later when chrome assigns an ID.
+			 * Instead, just delete it and let chrome add it for real later.
+			 */
+			coll.remove(model, { silent: true }); 
+			this.addTab(model.get('url'));
+		}, this));
+
+		browser.tabs.on('reload', _.bind(function(model){
+			this.reloadTab(model.id);
+		}, this));
 	},
 
 	onTabsList: function(tabs){
-		this.browser.set({ tabs: tabs });
+		this.browser.tabs.reset(tabs);
 	},
 
 	addTab: function(url){
@@ -99,5 +118,14 @@ var BrowserConnection = module.exports = my.Class(null, EventEmitter, {
 
 	setCycleTabDuration: function(durationMillis){
 		this.socket.emit("cycle:tabduration:set", durationMillis);
+	},
+
+	removeTab: function(tabId){
+		this.socket.emit("tabs:remove", tabId);
+	},
+
+	reloadTab: function(tabId){
+		console.log("telling chrome to reload tab "+tabId);
+		this.socket.emit("tabs:reload", tabId);
 	}
 });
