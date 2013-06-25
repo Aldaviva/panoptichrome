@@ -2,18 +2,143 @@
 	.border-radius(@browserlistview_border_radius);
 	.box-shadow(0, 0, 4px, rgba(0,0,0,0.2));
 	background-color : @detailview_background_color;
-	padding          : @detailview_spacing;
+	overflow         : hidden;
+	padding          : (0.8 * @detailview_spacing) @detailview_spacing @detailview_spacing;
 
 	> .title {
+		margin-bottom: 22px;
 
+		.name {
+			background  : none;
+			border      : 1px solid transparent;
+			font-size   : 30px;
+			font-weight : bold;
+			padding     : 0;
+			width       : 50%;
+
+			&:hover, &:focus {
+				border-bottom-color: #c8c8c8;
+			}
+		}
+
+		.address {
+			font-size  : 15px;
+			margin-top : 5px;
+			opacity    : 0.8;
+		}
 	}
 
 	> .tabs {
-		margin-right: @buttons_width + @detailview_spacing;
+		border       : 1px solid #c8c8c8;
+		margin-right : @buttons_width + @detailview_spacing;
 	}
 
 	> .buttons {
 		float : right;
 		width : @buttons_width;
+
+		> div + div {
+			margin-top: 14px;
+		}
+
+		button {
+			background: url('../images/button-bg.png') no-repeat;
+			border: none;
+			width: 40px;
+			height: 34px;
+			display: inline-block;
+			vertical-align: middle;
+			margin-right: 14px;
+			cursor: pointer;
+		}
+
+		.label {
+			font-size: 13px;
+			color: @button_text_color;
+
+			strong {
+				font-weight: bold;
+			}
+
+			a {
+				color: @link_blue;
+				border-bottom: 1px solid fade(@link_blue, 33%);
+				text-decoration: none;
+
+				&:hover {
+					border-bottom-color: fade(@link_blue, 67%);
+				}
+			}
+		}
+
+		.cycle {
+			button {
+				&::before {
+					height: 100%;
+					content: ' ';
+					display: block;
+					background: url('../images/button-cycle-paused.png') no-repeat 14px 9px;
+				}
+			}
+
+			.unpausedLabel {
+				display: inline;
+			}
+
+			.pausedLabel {
+				display: none;
+			}
+
+			&.paused {
+				button {
+					&::before {
+						background: url('../images/button-cycle-unpaused.png') no-repeat 13px 9px;
+					}
+				}
+
+				.unpausedLabel {
+					display: none;
+				}
+
+				.pausedLabel {
+					display: inline;
+				}
+			}
+		}
+
+		.fullscreen {
+			button {
+				&::before {
+					height: 100%;
+					content: ' ';
+					display: block;
+					background: url('../images/button-fullscreen-disabled.png') no-repeat 14px 9px;
+				}
+			}
+
+			.fullscreenDisabledLabel {
+				display: inline;
+			}
+
+			.fullscreenEnabledLabel {
+				display: none;
+			}
+
+			&.enabled {
+				button {
+					&::before {
+						background: url('../images/button-fullscreen-enabled.png') no-repeat 11px 6px;
+					}
+				}
+
+				.fullscreenDisabledLabel {
+					display: none;
+				}
+
+				.fullscreenEnabledLabel {
+					display: inline;
+				}
+			}
+		}
 	}
 }

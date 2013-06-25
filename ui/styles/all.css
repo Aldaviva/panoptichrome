@@ -1,3 +1,4 @@
+@import "jquery-ui-1.10.3.custom.css";
 /*
 YUI 2: Reset CSS
 Copyright (c) 2011, Yahoo! Inc. All rights reserved.
@@ -156,18 +157,20 @@ body {
   margin: 0 auto;
   position: relative;
   width: 54px;
+  /*&.macmini {
+				background-image: url('../images/installation-macmini.png');
+
+				.screenshot {
+					height : 44px;
+					left   : 7px;
+					top    : 3px;
+					width  : 25px;
+				}
+			}*/
+
 }
 .BrowserListView .BrowserListItemView .icon .screenshot {
   position: absolute;
-}
-.BrowserListView .BrowserListItemView .icon.macmini {
-  background-image: url('../images/installation-macmini.png');
-}
-.BrowserListView .BrowserListItemView .icon.macmini .screenshot {
-  height: 44px;
-  left: 7px;
-  top: 3px;
-  width: 25px;
 }
 .BrowserListView .BrowserListItemView .icon.browser_08d9ff04-07b4-4cee-aee7-dc324dee93d4 {
   background-image: url('../images/installation-forseti.png');
@@ -184,7 +187,7 @@ body {
 .BrowserListView .BrowserListItemView .icon.browser_892c72ea-53bc-4f87-8036-3da57edbf97d .screenshot {
   height: 21px;
   left: 10px;
-  top: 25px;
+  top: 24px;
   width: 35px;
 }
 .BrowserListView .BrowserListItemView .name {
@@ -240,12 +243,130 @@ body {
   -moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
   -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
   background-color: #fafafa;
-  padding: 39px;
+  overflow: hidden;
+  padding: 31.200000000000003px 39px 39px;
+}
+.DetailView > .title {
+  margin-bottom: 22px;
+}
+.DetailView > .title .name {
+  background: none;
+  border: 1px solid transparent;
+  font-size: 30px;
+  font-weight: bold;
+  padding: 0;
+  width: 50%;
+}
+.DetailView > .title .name:hover,
+.DetailView > .title .name:focus {
+  border-bottom-color: #c8c8c8;
+}
+.DetailView > .title .address {
+  font-size: 15px;
+  margin-top: 5px;
+  opacity: 0.8;
 }
 .DetailView > .tabs {
-  margin-right: 221px;
+  border: 1px solid #c8c8c8;
+  margin-right: 224px;
 }
 .DetailView > .buttons {
   float: right;
-  width: 182px;
+  width: 185px;
+}
+.DetailView > .buttons > div + div {
+  margin-top: 14px;
+}
+.DetailView > .buttons button {
+  background: url('../images/button-bg.png') no-repeat;
+  border: none;
+  width: 40px;
+  height: 34px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 14px;
+  cursor: pointer;
+}
+.DetailView > .buttons .label {
+  font-size: 13px;
+  color: #666666;
+}
+.DetailView > .buttons .label strong {
+  font-weight: bold;
+}
+.DetailView > .buttons .label a {
+  color: #5198c1;
+  border-bottom: 1px solid rgba(81, 152, 193, 0.33);
+  text-decoration: none;
+}
+.DetailView > .buttons .label a:hover {
+  border-bottom-color: rgba(81, 152, 193, 0.67);
+}
+.DetailView > .buttons .cycle button::before {
+  height: 100%;
+  content: ' ';
+  display: block;
+  background: url('../images/button-cycle-paused.png') no-repeat 14px 9px;
+}
+.DetailView > .buttons .cycle .unpausedLabel {
+  display: inline;
+}
+.DetailView > .buttons .cycle .pausedLabel {
+  display: none;
+}
+.DetailView > .buttons .cycle.paused button::before {
+  background: url('../images/button-cycle-unpaused.png') no-repeat 13px 9px;
+}
+.DetailView > .buttons .cycle.paused .unpausedLabel {
+  display: none;
+}
+.DetailView > .buttons .cycle.paused .pausedLabel {
+  display: inline;
+}
+.DetailView > .buttons .fullscreen button::before {
+  height: 100%;
+  content: ' ';
+  display: block;
+  background: url('../images/button-fullscreen-disabled.png') no-repeat 14px 9px;
+}
+.DetailView > .buttons .fullscreen .fullscreenDisabledLabel {
+  display: inline;
+}
+.DetailView > .buttons .fullscreen .fullscreenEnabledLabel {
+  display: none;
+}
+.DetailView > .buttons .fullscreen.enabled button::before {
+  background: url('../images/button-fullscreen-enabled.png') no-repeat 11px 6px;
+}
+.DetailView > .buttons .fullscreen.enabled .fullscreenDisabledLabel {
+  display: none;
+}
+.DetailView > .buttons .fullscreen.enabled .fullscreenEnabledLabel {
+  display: inline;
+}
+.TabListView .TabView {
+  background: white;
+}
+.TabListView .TabView .reload {
+  background-color: none;
+  border: none;
+  margin-right: 1em;
+  cursor: pointer;
+}
+.TabListView .TabView .close {
+  background-color: none;
+  border: none;
+  margin-right: 1em;
+  cursor: pointer;
+}
+.TabListView .TabView .reload,
+.TabListView .TabView .close {
+  float: right;
+}
+.TabListView .TabView .dragHandle {
+  display: inline-block;
+  background: black;
+  width: 5px;
+  height: 1em;
+  cursor: move;
 }

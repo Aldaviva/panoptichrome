@@ -33,7 +33,6 @@
 							.append($('<input>', { class: 'name', attr: { type: 'text' }}))
 							.append($('<div>', { class: 'address' })));
 
-					var tabListView = new TabListView({ collection: this.model.tabs });
 
 					this.$el.append($('<div>', { class: 'buttons' })
 						.append($('<div>', { class: 'cycle' })
@@ -53,14 +52,16 @@
 							.append($('<button>'))
 							.append($('<span>', { class: 'label' })
 								.append($('<span>', {
-									class: 'fullscreenEnabled',
+									class: 'fullscreenEnabledLabel',
 									html: '<strong>Fullscreen</strong> enabled' }))
 								.append($('<span>', {
-									class: 'fullscreenDisabled',
+									class: 'fullscreenDisabledLabel',
 									html: '<strong>Fullscreen</strong> disabled'
 								})))));
 
-					this.$el.append(tabListView.render());
+					var tabListView = new TabListView({ collection: this.model.tabs });
+					this.$el.append(tabListView.el);
+					tabListView.render();
 				}
 
 				this.renderTitle();
@@ -85,9 +86,7 @@
 		},
 
 		connectEvents: function(){
-			this.listenTo(this.model, 'change:tabs', _.bind(function(){
-				this.render();
-			}, this));
+			this.listenTo(this.model.tabs, 'reset', this.render);
 
 			this.listenTo(this.model, 'change:isFullscreen', this.renderFullscreenButton);
 

@@ -9,15 +9,17 @@
 
 	connectAndListenOnSockets();
 	render();
-	browsers.fetch(function(){
-		browsers.each(function(browser){
-			browser.tabs.fetch();
-		});
+	browsers.fetch({
+		success: function(){
+			browsers.each(function(browser){
+				browser.tabs.fetch();
+			});
+		}
 	});
 
-	browsers.once('add', function(model){
-		mediator.publish('browserListItem:focus', model);
-	});
+	// browsers.once('add', function(model){
+	// 	mediator.publish('browserListItem:focus', model);
+	// });
 
 	function connectAndListenOnSockets(){
 		var socketUrl = location.protocol+'//'+location.host+'/admins';
@@ -41,6 +43,10 @@
 		socket.on('change:screenshot', function(browserId){
 			var browser = browsers.get(browserId);
 			mediator.publish('change:screenshot:'+browserId, browser);
+		});
+
+		socket.on('change:tabs', function(browserId, tabs){
+			browsers.get(browserId).tabs.reset(tabs);
 		});
 	}
 

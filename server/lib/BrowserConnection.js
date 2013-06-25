@@ -125,7 +125,6 @@ var BrowserConnection = module.exports = my.Class(null, EventEmitter, {
 	},
 
 	reloadTab: function(tabId){
-		console.log("telling chrome to reload tab "+tabId);
 		this.socket.emit("tabs:reload", tabId);
 	}
 });

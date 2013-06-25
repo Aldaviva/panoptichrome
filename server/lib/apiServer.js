@@ -3,6 +3,7 @@ var socketio          = require('socket.io');
 
 var apiServer = module.exports = restify.createServer();
 
+apiServer.pre(restify.pre.sanitizePath());
 apiServer.use(restify.gzipResponse());
 apiServer.use(restify.bodyParser({ mapParams: false }));
 

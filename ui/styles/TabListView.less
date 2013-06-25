@@ -1,0 +1,34 @@
+.TabListView {
+	
+	.TabView {
+
+		background: white;
+
+		.tabButton(){
+			background-color: none;
+			border: none;
+			margin-right: 1em;
+			cursor: pointer;
+		}
+
+		.reload {
+			.tabButton();
+		}
+
+		.close {
+			.tabButton();
+		}
+
+		.reload, .close {
+			float: right;
+		}
+
+		.dragHandle {
+			display: inline-block;
+			background: black;
+			width: 5px;
+			height: 1em;
+			cursor: move;
+		}
+	}
+}

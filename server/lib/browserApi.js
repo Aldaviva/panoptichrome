@@ -148,6 +148,10 @@ browsers
 		model.on('change', function(){
 			adminSockets.emit("change:browser", model.toJSON());
 		});
+
+		model.tabs.on('reset', function(){
+			adminSockets.emit("change:tabs", model.id, model.tabs.toJSON());
+		});
 	})
 	.on('remove', function(opts){
 		adminSockets.emit('remove:browser', opts.id);
