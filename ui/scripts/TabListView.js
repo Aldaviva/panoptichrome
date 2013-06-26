@@ -7,19 +7,21 @@
 		initialize: function(){
 			_.bindAll(this);
 
+			this.sortable = null;
+
 			this.collection.on('add',    this.addTab);
 			this.collection.on('remove', this.removeTab); //maybe destroy instead
 		},
 
 		render: function(){
 			if(!this.el.childElementCount){
+				this.$el.append(new TabInserterView({ collection: this.collection }).render());
+				this.sortable = $('<div>', { class: 'sortable' });
+
+				this.$el.append(this.sortable);
 				this.collection.each(this.addTab, this);
 
-				var logEventName = function(event, ui){
-					console.log(event.type);
-				};
-
-				this.$el.sortable({
+				this.sortable.sortable({
 					axis        : "y",
 					cursor      : "move",
 					handle      : ".dragHandle",
@@ -39,24 +41,25 @@
 		onDrag: function(item, newIndex){
 			var tabView = item.data('view');
 			var tabModel = tabView.model;
-			console.log("dragged "+tabModel.get('url') + ' to position '+newIndex);
+			tabModel.save({ index: newIndex }, { patch: true });
+			// console.log("dragged "+tabModel.get('url') + ' to position '+newIndex);
 		},
 
 		updateDrag: function(){
-			if(this.el.childElementCount){
-				this.$el.sortable("refresh");
-			}
+			// this.sortable && this.sortable[0].childElementCount && this.sortable.sortable("refresh");
 		},
 
 		addTab: function(tabModel){
 			var tabView = new TabView({ model: tabModel });
 			tabModel.views = tabModel.views || {};
 			tabModel.views.tabView = tabView;
-			this.$el.append(tabView.render());
+			this.sortable.append(tabView.render());
+			this.updateDrag();
 		},
 
 		removeTab: function(tabModel){
 			tabModel.views.tabView.remove();
+			this.updateDrag();
 		}
 	});
 
@@ -64,10 +67,13 @@
 
 		className: 'tab TabView',
 
-		// events: {
-		// 	"click .reload": "onClickReload",
-		// 	"click .close": "onClickClose"
-		// },
+		events: {
+			"click .reload": "onClickReload",
+			"click .close": "onClickClose",
+			"keyup .url": "onKeyUpUrl",
+			"focus .url": "onFocusUrl",
+			"blur .url": "onBlurUrl"
+		},
 
 		initialize: function(){
 			_.bindAll(this);
@@ -90,11 +96,9 @@
 					.append($('<span>', { class: 'title' }))
 					.append($('<button>', {
 						class: 'close',
-						text: 'x',
 						attr: { title: 'Close tab' }}))
 					.append($('<button>', {
 						class: 'reload',
-						text: 'r',
 						attr: { title: 'Reload tab' }}));
 			}
 
@@ -129,7 +133,74 @@
 
 		onClickClose: function(){
 			this.model.destroy();
+		},
+
+		onKeyUpUrl: function(event){
+			if(event.keyCode == 13){ //enter
+				event.preventDefault();
+				var currentTarget = $(event.currentTarget);
+				currentTarget.blur();
+				this.model.save({ url: currentTarget.val() }, { patch: true });
+			}
+		},
+
+		onFocusUrl: function(event){
+			event.preventDefault();
+			var currentTarget = $(event.currentTarget);
+			_.defer(function(){
+				currentTarget.select();
+			});
+		},
+
+		onBlurUrl: function(event){
+			this.selectionStart = 0;
+			this.selectionEnd = 0;
 		}
+	});
+
+	var TabInserterView = Backbone.View.extend({
+
+		className: 'TabInserterView TabView',
+
+		events: {
+			"keyup .url": 'onKeyUpUrl'
+		},
+
+		initialize: function(){
+			_.bindAll(this);
+		},
+
+		render: function(){
+			if(!this.el.childElementCount){
+				this.$el
+					.append($('<img>', {
+						class: 'favicon',
+						attr: {
+							src: 'images/tab-add-plus.png'
+						}
+					}))
+					.append($('<div>', { class: 'urlWidth' })
+						.append($('<input>', {
+							class: 'url',
+							attr: {
+								type: 'text',
+								placeholder: 'add tab'
+							}})));
+			}
+
+			return this.el;
+		},
+
+		onKeyUpUrl: function(event){
+			if(event.keyCode == 13){ //enter
+				event.preventDefault();
+				var currentTarget = $(event.currentTarget);
+				currentTarget.blur();
+
+				this.collection.create({ url: currentTarget.val() });
+			}
+		}
+
 	});
 
 })();

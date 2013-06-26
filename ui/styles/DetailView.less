@@ -42,28 +42,28 @@
 		}
 
 		button {
-			background: url('../images/button-bg.png') no-repeat;
-			border: none;
-			width: 40px;
-			height: 34px;
-			display: inline-block;
-			vertical-align: middle;
-			margin-right: 14px;
-			cursor: pointer;
+			background     : url('../images/button-bg.png') no-repeat;
+			border         : none;
+			cursor         : pointer;
+			display        : inline-block;
+			height         : 34px;
+			margin-right   : 14px;
+			vertical-align : middle;
+			width          : 40px;
 		}
 
 		.label {
-			font-size: 13px;
-			color: @button_text_color;
+			font-size : 13px;
+			color     : @button_text_color;
 
 			strong {
 				font-weight: bold;
 			}
 
 			a {
-				color: @link_blue;
-				border-bottom: 1px solid fade(@link_blue, 33%);
-				text-decoration: none;
+				border-bottom   : 1px solid fade(@link_blue, 33%);
+				color           : @link_blue;
+				text-decoration : none;
 
 				&:hover {
 					border-bottom-color: fade(@link_blue, 67%);
@@ -74,10 +74,10 @@
 		.cycle {
 			button {
 				&::before {
-					height: 100%;
-					content: ' ';
-					display: block;
-					background: url('../images/button-cycle-paused.png') no-repeat 14px 9px;
+					background : url('../images/button-cycle-paused.png') no-repeat 14px 9px;
+					content    : ' ';
+					display    : block;
+					height     : 100%;
 				}
 			}
 
@@ -109,10 +109,10 @@
 		.fullscreen {
 			button {
 				&::before {
-					height: 100%;
-					content: ' ';
-					display: block;
-					background: url('../images/button-fullscreen-disabled.png') no-repeat 14px 9px;
+					background : url('../images/button-fullscreen-disabled.png') no-repeat 14px 9px;
+					content    : ' ';
+					display    : block;
+					height     : 100%;
 				}
 			}
 

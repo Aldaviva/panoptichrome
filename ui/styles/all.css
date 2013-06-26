@@ -121,6 +121,11 @@ textarea:focus,
 input:focus {
   outline: none;
 }
+html,
+body {
+  /*min-height: 100%;*/
+
+}
 body {
   background-color: #c0c0c0;
 }
@@ -280,12 +285,12 @@ body {
 .DetailView > .buttons button {
   background: url('../images/button-bg.png') no-repeat;
   border: none;
-  width: 40px;
-  height: 34px;
-  display: inline-block;
-  vertical-align: middle;
-  margin-right: 14px;
   cursor: pointer;
+  display: inline-block;
+  height: 34px;
+  margin-right: 14px;
+  vertical-align: middle;
+  width: 40px;
 }
 .DetailView > .buttons .label {
   font-size: 13px;
@@ -295,18 +300,18 @@ body {
   font-weight: bold;
 }
 .DetailView > .buttons .label a {
-  color: #5198c1;
   border-bottom: 1px solid rgba(81, 152, 193, 0.33);
+  color: #5198c1;
   text-decoration: none;
 }
 .DetailView > .buttons .label a:hover {
   border-bottom-color: rgba(81, 152, 193, 0.67);
 }
 .DetailView > .buttons .cycle button::before {
-  height: 100%;
+  background: url('../images/button-cycle-paused.png') no-repeat 14px 9px;
   content: ' ';
   display: block;
-  background: url('../images/button-cycle-paused.png') no-repeat 14px 9px;
+  height: 100%;
 }
 .DetailView > .buttons .cycle .unpausedLabel {
   display: inline;
@@ -324,10 +329,10 @@ body {
   display: inline;
 }
 .DetailView > .buttons .fullscreen button::before {
-  height: 100%;
+  background: url('../images/button-fullscreen-disabled.png') no-repeat 14px 9px;
   content: ' ';
   display: block;
-  background: url('../images/button-fullscreen-disabled.png') no-repeat 14px 9px;
+  height: 100%;
 }
 .DetailView > .buttons .fullscreen .fullscreenDisabledLabel {
   display: inline;
@@ -346,27 +351,111 @@ body {
 }
 .TabListView .TabView {
   background: white;
+  border-top: 1px solid rgba(200, 200, 200, 0.5);
+  height: 36px;
+  position: relative;
+}
+.TabListView .TabView .favicon,
+.TabListView .TabView .url,
+.TabListView .TabView .title,
+.TabListView .TabView .reload,
+.TabListView .TabView .close {
+  display: inline-block;
+  vertical-align: middle;
+}
+.TabListView .TabView .url,
+.TabListView .TabView .title {
+  font-size: 14px;
+  padding: 0 8px;
+}
+.TabListView .TabView .title {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  cursor: default;
+  display: inline-block;
+  font-weight: bold;
+  max-width: 220px;
+}
+.TabListView .TabView .favicon {
+  margin-right: 4px;
+  width: 16px;
+  height: 16px;
+}
+.TabListView .TabView .url {
+  background: none;
+  border: none;
+  height: inherit;
+  width: 210px;
+}
+.TabListView .TabView .url:hover,
+.TabListView .TabView .url:focus {
+  background-color: rgba(200, 200, 200, 0.25);
 }
 .TabListView .TabView .reload {
   background-color: none;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
   border: none;
-  margin-right: 1em;
   cursor: pointer;
+  float: right;
+  height: 36px;
+  opacity: 0.36;
+  width: 36px;
+  background-image: url('../images/button-reload-black.png');
+}
+.TabListView .TabView .reload:hover {
+  background-color: rgba(200, 200, 200, 0.25);
+  opacity: 1;
 }
 .TabListView .TabView .close {
   background-color: none;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
   border: none;
-  margin-right: 1em;
   cursor: pointer;
-}
-.TabListView .TabView .reload,
-.TabListView .TabView .close {
   float: right;
+  height: 36px;
+  opacity: 0.36;
+  width: 36px;
+  background-image: url('../images/button-close-black.png');
+}
+.TabListView .TabView .close:hover {
+  background-color: rgba(200, 200, 200, 0.25);
+  opacity: 1;
+}
+.TabListView .TabView .close:hover {
+  background-image: url('../images/button-close-red.png');
 }
 .TabListView .TabView .dragHandle {
-  display: inline-block;
-  background: black;
-  width: 5px;
-  height: 1em;
+  background: url('../images/dragHandle.png') no-repeat 50% 50%;
   cursor: move;
+  display: inline-block;
+  height: 36px;
+  margin-left: 6px;
+  margin-right: 10px;
+  opacity: 0.45;
+  vertical-align: middle;
+  width: 6px;
+}
+.TabListView .TabView.TabInserterView {
+  border-top: none;
+}
+.TabListView .TabView.TabInserterView .favicon {
+  margin-left: 22px;
+  margin-top: 10px;
+  opacity: 0.45;
+}
+.TabListView .TabView.TabInserterView .urlWidth {
+  height: 36px;
+  left: 42px;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.TabListView .TabView.TabInserterView .url {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  width: 100%;
 }

@@ -82,6 +82,14 @@ var BrowserConnection = module.exports = my.Class(null, EventEmitter, {
 		browser.tabs.on('reload', _.bind(function(model){
 			this.reloadTab(model.id);
 		}, this));
+
+		browser.tabs.on('change:index', _.bind(function(tab, newIndex){
+			this.setTabIndex(tab.id, newIndex);
+		}, this));
+
+		browser.tabs.on('change:url', _.bind(function(tab, url){
+			this.setTabUrl(tab.id, url);
+		}, this));
 	},
 
 	onTabsList: function(tabs){
@@ -126,5 +134,13 @@ var BrowserConnection = module.exports = my.Class(null, EventEmitter, {
 
 	reloadTab: function(tabId){
 		this.socket.emit("tabs:reload", tabId);
+	},
+
+	setTabIndex: function(tabId, index){
+		this.socket.emit("tabs:reorder", tabId, index);
+	},
+
+	setTabUrl: function(tabId, url){
+		this.socket.emit("tabs:setUrl", tabId, url);
 	}
 });

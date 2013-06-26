@@ -20,7 +20,7 @@
 		},*/
 
 		generateScreenshotUrl: function(){
-			return 'cgi-bin/browsers/'+this.id+'/screenshot.jpg?'+(+new Date());
+			return 'cgi-bin/browsers/'+this.id+'/screenshot.png?'+(+new Date());
 		},
 
 		/*
