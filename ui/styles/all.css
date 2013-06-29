@@ -162,20 +162,18 @@ body {
   margin: 0 auto;
   position: relative;
   width: 54px;
-  /*&.macmini {
-				background-image: url('../images/installation-macmini.png');
-
-				.screenshot {
-					height : 44px;
-					left   : 7px;
-					top    : 3px;
-					width  : 25px;
-				}
-			}*/
-
 }
 .BrowserListView .BrowserListItemView .icon .screenshot {
   position: absolute;
+}
+.BrowserListView .BrowserListItemView .icon.browser_5cca3c75-bfc6-4cc2-83bf-45b6d2b6f6b1 {
+  background-image: url('../images/installation-macmini.png');
+}
+.BrowserListView .BrowserListItemView .icon.browser_5cca3c75-bfc6-4cc2-83bf-45b6d2b6f6b1 .screenshot {
+  height: 44px;
+  left: 7px;
+  top: 3px;
+  width: 25px;
 }
 .BrowserListView .BrowserListItemView .icon.browser_08d9ff04-07b4-4cee-aee7-dc324dee93d4 {
   background-image: url('../images/installation-forseti.png');
@@ -351,6 +349,8 @@ body {
 }
 .TabListView .TabView {
   background: white;
+  border-left: 3px solid transparent;
+  border-right: 3px solid transparent;
   border-top: 1px solid rgba(200, 200, 200, 0.5);
   height: 36px;
   position: relative;
@@ -363,6 +363,10 @@ body {
   display: inline-block;
   vertical-align: middle;
 }
+.TabListView .TabView .title,
+.TabListView .TabView .favicon {
+  cursor: pointer;
+}
 .TabListView .TabView .url,
 .TabListView .TabView .title {
   font-size: 14px;
@@ -372,10 +376,9 @@ body {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
-  cursor: default;
   display: inline-block;
   font-weight: bold;
-  max-width: 220px;
+  width: 220px;
 }
 .TabListView .TabView .favicon {
   margin-right: 4px;
@@ -438,6 +441,15 @@ body {
   vertical-align: middle;
   width: 6px;
 }
+.TabListView .TabView.active,
+.TabListView .TabView.active:hover {
+  border-left-color: #92bcd6;
+  border-right-color: #92bcd6;
+}
+.TabListView .TabView:hover {
+  border-left-color: #d9d9d9;
+  border-right-color: #d9d9d9;
+}
 .TabListView .TabView.TabInserterView {
   border-top: none;
 }
@@ -445,6 +457,7 @@ body {
   margin-left: 22px;
   margin-top: 10px;
   opacity: 0.45;
+  cursor: default;
 }
 .TabListView .TabView.TabInserterView .urlWidth {
   height: 36px;
@@ -458,4 +471,8 @@ body {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   width: 100%;
+}
+.TabListView .TabView.TabInserterView .url:hover,
+.TabListView .TabView.TabInserterView .url:focus {
+  background-color: transparent;
 }

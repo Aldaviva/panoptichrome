@@ -3,6 +3,12 @@
 	var socket;
 	var cycleIntervalId;
 
+	chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
+		if(message == 'change:serverAddress'){
+			console.log("serverAddress changed to "+localStorage.getItem("serverAddress"));
+		}
+	});
+
 	function main(){
 		Q.stopUnhandledRejectionTracking(); //Q's logic is broken, causing warnings to be fired spuriously
 
@@ -12,12 +18,15 @@
 			localStorage.setItem("installationId", installationId);
 		}
 
-		socket = io.connect('http://10.4.4.251:8081/browsers');
-		socket.on('connect', onConnection);
-		connectEvents();
+		var serverAddress = localStorage.getItem('serverAddress');
+		if(serverAddress){
+			socket = io.connect('http://'+serverAddress+'/browsers');
+			socket.on('connect', onConnection);
+			connectEvents();
 
-		setIsCyclePaused(isCyclePaused()); //restart timers
-		setInterval(uploadScreenshot, 10*1000);
+			setIsCyclePaused(isCyclePaused()); //restart timers
+			setInterval(uploadScreenshot, 10*1000);
+		}
 	}
 
 	function onConnection(){
@@ -222,7 +231,11 @@
 		var originalSizeDeferred = Q.defer();
 
 		chrome.tabs.executeScript(null, { code: "[window.innerWidth, window.innerHeight]" }, function(originalSize){
-			originalSizeDeferred.resolve(originalSize[0]);
+			if(originalSize){
+				originalSizeDeferred.resolve(originalSize[0]);
+			} else {
+				originalSizeDeferred.reject();
+			}
 		});
 
 		return originalSizeDeferred.promise;

@@ -1,0 +1,10 @@
+To pack the extension into a distributable .crx:
+
+1. Chrome
+2. Settings
+3. Extensions
+4. Developer mode = true
+5. Pack extension
+	Directory = panoptichrome/client/src
+	Key = the .pem file that Ben has
+6. Packed .crx will be generated

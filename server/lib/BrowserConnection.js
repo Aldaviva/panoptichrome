@@ -90,6 +90,12 @@ var BrowserConnection = module.exports = my.Class(null, EventEmitter, {
 		browser.tabs.on('change:url', _.bind(function(tab, url){
 			this.setTabUrl(tab.id, url);
 		}, this));
+
+		browser.tabs.on('change:active', _.bind(function(tab, isActive){
+			if(isActive){
+				this.activateTab(tab.id);
+			}
+		}, this));
 	},
 
 	onTabsList: function(tabs){
@@ -100,8 +106,9 @@ var BrowserConnection = module.exports = my.Class(null, EventEmitter, {
 		this.socket.emit('tabs:add', url);
 	},
 
-	activateTab: function(tab){
-		this.socket.emit('tabs:activate', tab.id);
+	activateTab: function(tabId){
+		console.log('socket emit activate tab');
+		this.socket.emit('tabs:activate', tabId);
 	},
 
 	setFullscreen: function(shouldBeFullscreen){

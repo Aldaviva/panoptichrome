@@ -6,14 +6,20 @@
 		@url_width: 210px;
 		@active_bg_color: fade(#C8C8C8, 25%);
 
-		background : white;
-		border-top : 1px solid fade(#C8C8C8, 50%);
-		height     : @tabview_height;
-		position   : relative;
+		background   : white;
+		border-left  : 3px solid transparent;
+		border-right : 3px solid transparent;
+		border-top   : 1px solid fade(#C8C8C8, 50%);
+		height       : @tabview_height;
+		position     : relative;
 
 		.favicon, .url, .title, .reload, .close {
 			display        : inline-block;
 			vertical-align : middle;
+		}
+
+		.title, .favicon {
+			cursor: pointer;
 		}
 
 		.url, .title {
@@ -23,10 +29,9 @@
 
 		.title {
 			.ellipsis();
-			cursor      : default;
 			display     : inline-block;
 			font-weight : bold;
-			max-width   : @title_width;
+			width       : @title_width;
 		}
 
 		.favicon {
@@ -89,6 +94,16 @@
 			width          : 6px;
 		}
 
+		&.active, &.active:hover {
+			border-left-color  : #92bcd6;
+			border-right-color : #92bcd6;
+		}
+
+		&:hover {
+			border-left-color  : #d9d9d9;
+			border-right-color : #d9d9d9;
+		}
+
 		&.TabInserterView {
 			border-top: none;
 
@@ -96,6 +111,7 @@
 				margin-left : 22px;
 				margin-top  : (@tabview_height - 16px) / 2 ;
 				opacity     : 0.45;
+				cursor: default;
 			}
 
 			.urlWidth {
@@ -109,6 +125,10 @@
 			.url {
 				.box-sizing(border-box);
 				width: 100%;
+
+				&:hover, &:focus {
+					background-color: transparent;
+				}
 			}
 		}
 	}

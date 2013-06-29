@@ -4,6 +4,8 @@
 	"manifest_version": 2,
 	"description": "Remotely manage browser tabs.",
 
+	"options_page": "options.html",
+
 	"background": {
 		"scripts": [
 			"thirdparty/lodash.min.js",

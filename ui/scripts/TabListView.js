@@ -72,7 +72,10 @@
 			"click .close": "onClickClose",
 			"keyup .url": "onKeyUpUrl",
 			"focus .url": "onFocusUrl",
-			"blur .url": "onBlurUrl"
+			"blur .url": "onBlurUrl",
+			// "click .favicon": "activate",
+			// "click .title": "activate"
+			"click": "activate"
 		},
 
 		initialize: function(){
@@ -155,6 +158,11 @@
 		onBlurUrl: function(event){
 			this.selectionStart = 0;
 			this.selectionEnd = 0;
+		},
+
+		activate: function(event){
+			event.preventDefault();
+			this.model.save({ active: true }, { patch: true });
 		}
 	});
 
