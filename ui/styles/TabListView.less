@@ -2,24 +2,21 @@
 	
 	.TabView {
 		@tabview_height: 36px;
-		@title_width: 220px;
-		@url_width: 210px;
+		@url_width: 280px;
+		@title_width: 430px - @url_width; //this is a magic number
 		@active_bg_color: fade(#C8C8C8, 25%);
 
 		background   : white;
 		border-left  : 3px solid transparent;
 		border-right : 3px solid transparent;
 		border-top   : 1px solid fade(#C8C8C8, 50%);
+		cursor       : pointer;
 		height       : @tabview_height;
 		position     : relative;
 
 		.favicon, .url, .title, .reload, .close {
 			display        : inline-block;
 			vertical-align : middle;
-		}
-
-		.title, .favicon {
-			cursor: pointer;
 		}
 
 		.url, .title {

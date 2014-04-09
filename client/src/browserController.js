@@ -3,7 +3,7 @@
 	var socket;
 	var cycleIntervalId;
 
-	chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
+	chrome.runtime.onMessage && chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
 		if(message == 'change:serverAddress'){
 			console.log("serverAddress changed to "+localStorage.getItem("serverAddress"));
 		}
@@ -25,7 +25,7 @@
 			connectEvents();
 
 			setIsCyclePaused(isCyclePaused()); //restart timers
-			setInterval(uploadScreenshot, 10*1000);
+			// setInterval(uploadScreenshot, 10*1000);
 		}
 	}
 
@@ -42,28 +42,32 @@
 					cycleTabDuration: getCycleTabDuration()
 				});
 
-				uploadScreenshot();
+				// uploadScreenshot();
 			});
 
 		registerChromeTabListeners();
 	}
 
 	function connectEvents(){
-		socket.on('tabs:add',              addTab);
-		socket.on('tabs:activate',         activateTab);
-		socket.on('tabs:remove',           removeTab);
-		socket.on('tabs:reload',           reloadTab);
-		socket.on('tabs:reorder',          reorderTab);
-		socket.on('tabs:setUrl',           setTabUrl);
-		socket.on('fullscreen:set',        setFullscreen);
-		socket.on('name:set',              setName);
-		socket.on('cycle:tabduration:set', setCycleTabDuration);
-		socket.on('cycle:ispaused:set',    setIsCyclePaused);
+		socket.on('tabs:add',               addTab);
+		socket.on('tabs:activate',          activateTab);
+		socket.on('tabs:activate:adjacent', activateAdjacentTab);
+		socket.on('tabs:remove',            removeTab);
+		socket.on('tabs:reload',            reloadTab);
+		socket.on('tabs:reorder',           reorderTab);
+		socket.on('tabs:setUrl',            setTabUrl);
+		socket.on('fullscreen:set',         setFullscreen);
+		socket.on('name:set',               setName);
+		socket.on('cycle:tabduration:set',  setCycleTabDuration);
+		socket.on('cycle:ispaused:set',     setIsCyclePaused);
+		socket.on('message:post',           postMessageToActiveTab);
 	}
 
 	var registerChromeTabListeners = _.once(function(){
 		['onCreated', 'onUpdated', 'onMoved', 'onActivated', 'onRemoved', 'onReplaced'].forEach(function(eventName){
-			chrome.tabs[eventName].addListener(reportTabs);
+			if(chrome.tabs[eventName]){
+				chrome.tabs[eventName].addListener(reportTabs);
+			}
 		});
 	});
 
@@ -73,10 +77,13 @@
 				socket.emit('tabs:list', tabs);
 			});
 
-		uploadScreenshot();
+		// uploadScreenshot();
 	}, 200);
 
+	var mostRecentScreenshotCompletion = 0;
+
 	function uploadScreenshot(){
+		
 		captureVisibleTab()
 			.then(function(dataUri){
 				// console.log("captured a dataUri of length "+dataUri.length);
@@ -100,6 +107,12 @@
 				// err && console.error(err);
 				// console.log("missing screenshot, ignoring");
 				//invalid screenshot, ignore
+			})
+			.then(function(){
+				var now = +new Date();
+				console.log(now - mostRecentScreenshotCompletion);
+				mostRecentScreenshotCompletion = now;
+				setTimeout(uploadScreenshot, 0);
 			});
 	}
 
@@ -158,7 +171,7 @@
 		if(serialized !== null){
 			return parseInt(serialized, 10);
 		} else {
-			return 3*1000;
+			return 10*1000;
 		}
 	}
 
@@ -185,8 +198,8 @@
 
 	function startCycling(){
 		var intervalMillis = getCycleTabDuration();
-		cycleIntervalId = setInterval(activateNextTab, intervalMillis);
-		activateNextTab();
+		cycleIntervalId = setInterval(activateAdjacentTab, intervalMillis);
+		activateAdjacentTab();
 	}
 
 	var addTabHelper = _wrapWithPromise(chrome.tabs.create);
@@ -212,19 +225,19 @@
 		return updateTab(tabId, { url: url });
 	};
 
-	var activateNextTab = function(){
-		Q.all([
+	var activateAdjacentTab = function(shouldActivatePreviousTab){
+		return Q.all([
 				getActiveTab().get("index"),
 				getCurrentWindow().get('tabs').get('length')
 			])
 			.spread(function(currentTabIndex, numTabs){
-				var nextIndex = (currentTabIndex + 1) % numTabs;
+				var tabIndexOffset = (shouldActivatePreviousTab) ? -1 : 1;
+				var nextIndex = (currentTabIndex + tabIndexOffset + numTabs) % numTabs;
 				return getTabs({ index: nextIndex });
 			})
 			.get(0)
 			.get("id")
-			.then(activateTab)
-			.done();
+			.then(activateTab);
 	};
 
 	function getTabDimensions(){
@@ -239,6 +252,12 @@
 		});
 
 		return originalSizeDeferred.promise;
+	}
+
+	function postMessageToActiveTab(message){
+		chrome.tabs.executeScript(null, {
+			code: "window.postMessage("+JSON.stringify(message)+", '*')"
+		});
 	}
 
 	function resampleScreenshot(dataUri){
@@ -275,6 +294,8 @@
 				deferred.resolve(resampled);
 
 				delete originalImage;
+				// delete canvasContext;
+				// delete resampledCanvas;
 			};
 			return deferred.promise;
 		})

@@ -66,6 +66,10 @@ var BrowserConnection = module.exports = my.Class(null, EventEmitter, {
 			this.setCycleTabDuration(val);
 		}, this));
 
+		browser.on("message", _.bind(function(message){
+			this.postMessage(message);
+		}, this));
+
 		browser.tabs.on("remove", _.bind(function(model){
 			this.removeTab(model.id);
 		}, this));
@@ -92,14 +96,16 @@ var BrowserConnection = module.exports = my.Class(null, EventEmitter, {
 		}, this));
 
 		browser.tabs.on('change:active', _.bind(function(tab, isActive){
-			if(isActive){
+			if(tab == 'next' || tab == 'previous') {
+				this.activateAdjacentTab((tab == 'previous'));
+			} else if(isActive) {
 				this.activateTab(tab.id);
 			}
 		}, this));
 	},
 
 	onTabsList: function(tabs){
-		this.browser.tabs.reset(tabs);
+		this.browser && this.browser.tabs.reset(tabs);
 	},
 
 	addTab: function(url){
@@ -107,8 +113,11 @@ var BrowserConnection = module.exports = my.Class(null, EventEmitter, {
 	},
 
 	activateTab: function(tabId){
-		console.log('socket emit activate tab');
 		this.socket.emit('tabs:activate', tabId);
+	},
+
+	activateAdjacentTab: function(shouldActivatePreviousTab){
+		this.socket.emit('tabs:activate:adjacent', shouldActivatePreviousTab);
 	},
 
 	setFullscreen: function(shouldBeFullscreen){
@@ -149,5 +158,9 @@ var BrowserConnection = module.exports = my.Class(null, EventEmitter, {
 
 	setTabUrl: function(tabId, url){
 		this.socket.emit("tabs:setUrl", tabId, url);
+	},
+
+	postMessage: function(message){
+		this.socket.emit("message:post", message);
 	}
 });

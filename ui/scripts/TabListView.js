@@ -71,7 +71,7 @@
 			"click .reload": "onClickReload",
 			"click .close": "onClickClose",
 			"keyup .url": "onKeyUpUrl",
-			"focus .url": "onFocusUrl",
+			"click .url": "onClickUrl",
 			"blur .url": "onBlurUrl",
 			// "click .favicon": "activate",
 			// "click .title": "activate"
@@ -110,7 +110,7 @@
 				favIconUrl = 'images/defaultFavicon.png';
 			}
 			this.$('.favicon').attr('src', favIconUrl);
-			this.$('.url').val(this.model.get('url'));
+			this.$('.url').val(this.model.get('url').replace(/\/$/, ''));
 			this.$('.title').text(this.model.get('title'));
 			this.$el.toggleClass('active', this.model.get('active'));
 
@@ -134,7 +134,8 @@
 			this.model.reload();
 		},
 
-		onClickClose: function(){
+		onClickClose: function(event){
+			event.stopPropagation();
 			this.model.destroy();
 		},
 
@@ -147,8 +148,9 @@
 			}
 		},
 
-		onFocusUrl: function(event){
+		onClickUrl: function(event){
 			event.preventDefault();
+			event.stopPropagation();
 			var currentTarget = $(event.currentTarget);
 			_.defer(function(){
 				currentTarget.select();

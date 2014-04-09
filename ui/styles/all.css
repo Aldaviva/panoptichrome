@@ -165,33 +165,62 @@ body {
 }
 .BrowserListView .BrowserListItemView .icon .screenshot {
   position: absolute;
+  display: none;
 }
-.BrowserListView .BrowserListItemView .icon.browser_5cca3c75-bfc6-4cc2-83bf-45b6d2b6f6b1 {
+.BrowserListView .BrowserListItemView .icon.browser_d9acd148-c715-445a-9453-cd5b88d2f7fe {
+  background-image: url('../images/installation-sam.png');
+}
+.BrowserListView .BrowserListItemView .icon.browser_185af033-0f83-4573-8288-884033802672 {
+  background-image: url('../images/installation-max.png');
+}
+.BrowserListView .BrowserListItemView .icon.browser_068da064-c7ef-4fbc-9b3a-4febe3ee341b {
   background-image: url('../images/installation-macmini.png');
 }
-.BrowserListView .BrowserListItemView .icon.browser_5cca3c75-bfc6-4cc2-83bf-45b6d2b6f6b1 .screenshot {
+.BrowserListView .BrowserListItemView .icon.browser_068da064-c7ef-4fbc-9b3a-4febe3ee341b .screenshot {
   height: 44px;
   left: 7px;
   top: 3px;
   width: 25px;
 }
-.BrowserListView .BrowserListItemView .icon.browser_08d9ff04-07b4-4cee-aee7-dc324dee93d4 {
+.BrowserListView .BrowserListItemView .icon.browser_ef373ef9-330b-41fc-a60b-263e4c358ccc {
   background-image: url('../images/installation-forseti.png');
 }
-.BrowserListView .BrowserListItemView .icon.browser_08d9ff04-07b4-4cee-aee7-dc324dee93d4 .screenshot {
+.BrowserListView .BrowserListItemView .icon.browser_ef373ef9-330b-41fc-a60b-263e4c358ccc .screenshot {
   height: 44px;
   left: 26px;
   top: 3px;
   width: 25px;
 }
-.BrowserListView .BrowserListItemView .icon.browser_892c72ea-53bc-4f87-8036-3da57edbf97d {
+.BrowserListView .BrowserListItemView .icon.browser_892c72ea-53bc-4f87-8036-3da57edbf97d,
+.BrowserListView .BrowserListItemView .icon.browser_a2629973-fd9b-4750-8335-e1635ed79f87,
+.BrowserListView .BrowserListItemView .icon.browser_2926e7eb-a304-4f21-a06b-174aa7370cbd {
   background-image: url('../images/installation-acer.png');
 }
-.BrowserListView .BrowserListItemView .icon.browser_892c72ea-53bc-4f87-8036-3da57edbf97d .screenshot {
+.BrowserListView .BrowserListItemView .icon.browser_892c72ea-53bc-4f87-8036-3da57edbf97d .screenshot,
+.BrowserListView .BrowserListItemView .icon.browser_a2629973-fd9b-4750-8335-e1635ed79f87 .screenshot,
+.BrowserListView .BrowserListItemView .icon.browser_2926e7eb-a304-4f21-a06b-174aa7370cbd .screenshot {
   height: 21px;
   left: 10px;
   top: 24px;
   width: 35px;
+}
+.BrowserListView .BrowserListItemView .icon.browser_87449475-9602-418c-a759-96be6f90e868 {
+  background-image: url('../images/installation-p2412.png');
+}
+.BrowserListView .BrowserListItemView .icon.browser_87449475-9602-418c-a759-96be6f90e868 .screenshot {
+  height: 25px;
+  left: 5px;
+  top: 15px;
+  width: 44px;
+}
+.BrowserListView .BrowserListItemView .icon.browser_1e2af37c-ac20-4372-9039-c158b5670786 {
+  background-image: url('../images/installation-aquos60.png');
+}
+.BrowserListView .BrowserListItemView .icon.browser_1e2af37c-ac20-4372-9039-c158b5670786 .screenshot {
+  height: 29px;
+  left: 1px;
+  top: 20px;
+  width: 52px;
 }
 .BrowserListView .BrowserListItemView .name {
   color: black;
@@ -352,6 +381,7 @@ body {
   border-left: 3px solid transparent;
   border-right: 3px solid transparent;
   border-top: 1px solid rgba(200, 200, 200, 0.5);
+  cursor: pointer;
   height: 36px;
   position: relative;
 }
@@ -362,10 +392,6 @@ body {
 .TabListView .TabView .close {
   display: inline-block;
   vertical-align: middle;
-}
-.TabListView .TabView .title,
-.TabListView .TabView .favicon {
-  cursor: pointer;
 }
 .TabListView .TabView .url,
 .TabListView .TabView .title {
@@ -378,7 +404,7 @@ body {
   white-space: nowrap;
   display: inline-block;
   font-weight: bold;
-  width: 220px;
+  width: 150px;
 }
 .TabListView .TabView .favicon {
   margin-right: 4px;
@@ -389,7 +415,7 @@ body {
   background: none;
   border: none;
   height: inherit;
-  width: 210px;
+  width: 280px;
 }
 .TabListView .TabView .url:hover,
 .TabListView .TabView .url:focus {

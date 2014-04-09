@@ -30,7 +30,7 @@ apiServer.patch({ path: API_ROOT+'browsers/:browserId', name: 'patchBrowser' }, 
 	var browser = browsers.get(browserId);
 
 	browser.set(_.pick(req.body, ["name", "isFullscreen", "isCyclePaused", "cycleTabDuration"]));
-	res.send(200);
+	res.send(204);
 });
 
 apiServer.get({ path: API_ROOT+'browsers/:browserId/tabs', name: 'getTabs' }, function(req, res){
@@ -51,7 +51,7 @@ apiServer.post({ path: API_ROOT+'browsers/:browserId/tabs', name: 'addTab' }, fu
 	if(browser){
 		var tabAttributes = { url: req.body.url };
 		browser.tabs.add(tabAttributes);
-		res.send(200);
+		res.send(204);
 	} else {
 		res.send(404, "No browsers found with id = "+browserId);
 	}
@@ -81,7 +81,7 @@ apiServer.del({ path: API_ROOT+'browsers/:browserId/tabs/:tabId', name: 'removeT
 
 	if(browser){
 		browser.tabs.remove(tabId);
-		res.send(200);
+		res.send(204);
 	} else {
 		res.send(404, "No browsers found with id = "+browserId);
 	}
@@ -111,12 +111,17 @@ apiServer.patch({ path: API_ROOT+'browsers/:browserId/tabs/:tabId', name: 'patch
 	var tabId = req.params.tabId;
 
 	if(browser){
-		var tab = browser.tabs.get(tabId);
-		if(tab){
-			tab.set(_.pick(req.body, ["index", "active", "url"]));
-			res.send(200);
+		if((req.body.active === true) && (tabId == 'next' || tabId == 'previous')){
+			browser.tabs.trigger('change:active', tabId);
+			res.send(204);
 		} else {
-			res.send(404, "Browser does not have a tab with id = " + tabId);
+			var tab = browser.tabs.get(tabId);
+			if(tab){
+				tab.set(_.pick(req.body, ["index", "active", "url"]));
+				res.send(204);
+			} else {
+				res.send(404, "Browser does not have a tab with id = " + tabId);
+			}
 		}
 	} else {
 		res.send(404, "No browsers found with id = "+browserId);
@@ -134,6 +139,18 @@ apiServer.get({ path: API_ROOT+'browsers/:browserId/screenshot.png', name: 'getS
 	}
 });
 
+apiServer.post({ path: API_ROOT+'browsers/:browserId/message', name: 'postMessage' }, function(req, res){
+	var browserId = req.params.browserId;
+	var browser = browsers.get(browserId);
+	var message = req.body;
+
+	if(browser){
+		browser.trigger("message", message);
+		res.send(204);
+	} else {
+		res.send(404, "No browsers found with id = "+browserId);
+	}
+})
 
 browserSockets.on('connection', function(socket){
 	var browserConnection = new BrowserConnection(socket);

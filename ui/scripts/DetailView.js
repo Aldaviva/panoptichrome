@@ -75,7 +75,7 @@
 		renderTitle: function(){
 			var title = this.$('.title');
 			$('.name', title).val(this.model.get('name'));
-			$('.address', title).text(this.model.get('address'));
+			$('.address', title).text(this.model.get('address') + " \u2013 " + this.model.id);
 		},
 
 		setModel: function(model){
