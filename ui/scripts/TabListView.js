@@ -111,7 +111,9 @@
 			}
 			this.$('.favicon').attr('src', favIconUrl);
 			this.$('.url').val(this.model.get('url').replace(/\/$/, ''));
-			this.$('.title').text(this.model.get('title'));
+			this.$('.title')
+				.text(this.model.get('title'))
+				.attr('title', this.model.get('title'));
 			this.$el.toggleClass('active', this.model.get('active'));
 
 			return this.el;

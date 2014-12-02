@@ -118,7 +118,8 @@ input::-moz-focus-inner {
   padding: 0;
 }
 textarea:focus,
-input:focus {
+input:focus,
+button:focus {
   outline: none;
 }
 html,
@@ -222,6 +223,15 @@ body {
   top: 20px;
   width: 52px;
 }
+.BrowserListView .BrowserListItemView .icon.browser_27f48d5a-7dca-42f0-b2f8-09db57b94fc6 {
+  background-image: url('../images/installation-mondopad.png');
+}
+.BrowserListView .BrowserListItemView .icon.browser_27f48d5a-7dca-42f0-b2f8-09db57b94fc6 .screenshot {
+  height: 48px;
+  width: 27px;
+  top: 10px;
+  left: 3px;
+}
 .BrowserListView .BrowserListItemView .name {
   color: black;
   font-size: 12px;
@@ -233,9 +243,6 @@ body {
   opacity: 0.8;
 }
 .BrowserListView .BrowserListItemView.focused {
-  opacity: 1;
-}
-.BrowserListView .BrowserListItemView.focused {
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
   -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
@@ -243,29 +250,26 @@ body {
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
   cursor: default;
+  opacity: 1;
 }
 .BrowserListView .BrowserListItemView.addBrowserLink {
-  /*opacity: 0.8;*/
-
   margin-left: 3px;
+  text-decoration: none;
 }
 .BrowserListView .BrowserListItemView.addBrowserLink .icon {
   border-radius: 5px;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   border: 2px dashed rgba(0, 0, 0, 0.67);
+  color: black;
   font-size: 30px;
   font-weight: bold;
   height: 30.375px;
-  line-height: 25.818749999999998px;
+  line-height: 30.375px;
   margin-top: 11.8125px;
   margin-bottom: 11.8125px;
   opacity: 0.4;
   text-align: center;
-}
-.BrowserListView .BrowserListItemView.addBrowserLink .name {
-  /*opacity: 0.6;*/
-
 }
 .DetailView {
   border-radius: 20px;
@@ -300,11 +304,11 @@ body {
 }
 .DetailView > .tabs {
   border: 1px solid #c8c8c8;
-  margin-right: 224px;
+  margin-right: 234px;
 }
 .DetailView > .buttons {
   float: right;
-  width: 185px;
+  width: 195px;
 }
 .DetailView > .buttons > div + div {
   margin-top: 14px;
@@ -404,7 +408,7 @@ body {
   white-space: nowrap;
   display: inline-block;
   font-weight: bold;
-  width: 150px;
+  width: 140px;
 }
 .TabListView .TabView .favicon {
   margin-right: 4px;
@@ -422,7 +426,7 @@ body {
   background-color: rgba(200, 200, 200, 0.25);
 }
 .TabListView .TabView .reload {
-  background-color: none;
+  background-color: white;
   background-position: 50% 50%;
   background-repeat: no-repeat;
   border: none;
@@ -438,7 +442,7 @@ body {
   opacity: 1;
 }
 .TabListView .TabView .close {
-  background-color: none;
+  background-color: white;
   background-position: 50% 50%;
   background-repeat: no-repeat;
   border: none;

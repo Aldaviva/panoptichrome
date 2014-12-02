@@ -32,7 +32,7 @@
 
 		render: function(){
 			if(!this.el.childElementCount){
-				this.$el.append($('<div>', { class: 'addBrowserLink BrowserListItemView' })
+				this.$el.append($('<a>', { href: 'http://skadi.bluejeansnet.com/panoptichrome/panoptichrome.crx', class: 'addBrowserLink BrowserListItemView' })
 					.append($('<div>', { class: 'icon', text: '+' }))
 					.append($('<div>', { class: 'name', text: 'add'})));
 			}

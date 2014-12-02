@@ -3,7 +3,7 @@
 	.TabView {
 		@tabview_height: 36px;
 		@url_width: 280px;
-		@title_width: 430px - @url_width; //this is a magic number
+		@title_width: 615px - @url_width - @buttons_width; //this is a magic number
 		@active_bg_color: fade(#C8C8C8, 25%);
 
 		background   : white;
@@ -49,7 +49,7 @@
 		}
 
 		.tabButton(){
-			background-color    : none;
+			background-color    : white;
 			background-position : 50% 50%;
 			background-repeat   : no-repeat;
 			border              : none;

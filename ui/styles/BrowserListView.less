@@ -93,6 +93,17 @@
 					width  : 52px;
 				}
 			}
+
+			&.browser_27f48d5a-7dca-42f0-b2f8-09db57b94fc6 {
+				background-image: url('../images/installation-mondopad.png');
+
+				.screenshot {
+					height: 48px;
+					width: 27px;
+					top: 10px;
+					left: 3px;
+				}
+			}
 		}
 
 		.name {
@@ -118,16 +129,18 @@
 
 		&.addBrowserLink {
 			margin-left: 3px;
+			text-decoration: none;
 
 			.icon {
 				@height : @icon_size / 16 * 9;
 
 				.border-radius(5px);
 				border        : 2px dashed rgba(0,0,0,0.67);
+				color         : black;
 				font-size     : 30px;
 				font-weight   : bold;
 				height        : @height;
-				line-height   : @height * .85;
+				line-height   : @height * 1;
 				margin-top    : ((@icon_size - @height) / 2);
 				margin-bottom : ((@icon_size - @height) / 2);
 				opacity       : 0.4;
