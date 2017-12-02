@@ -1,6 +1,6 @@
 {
 	"name"    : "panoptichrome",
-	"version" : "1.0.0",
+	"version" : "1.0.1-SNAPSHOT",
 	"author"  : "Ben Hutchison <ben@aldaviva.com>",
 	
 	"dependencies": {

@@ -23,15 +23,15 @@ var Backbone = require('backbone');
 
 module.exports = Backbone.Model.extend({
 	initialize: function(){
-		this.tabs = new TabList(this);
+		this.tabs = new TabList(null, { browser: this });
 	}
 });
 
 var Tab = Backbone.Model.extend({});
 
 var TabList = Backbone.Collection.extend({
-	initialize: function(browser){
-		this.browser = browser;
+	initialize: function(models, options){
+		this.browser = options.browser;
 	},
 	model: Tab,
 	comparator: "index"

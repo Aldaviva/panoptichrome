@@ -214,10 +214,12 @@ body {
   top: 15px;
   width: 44px;
 }
-.BrowserListView .BrowserListItemView .icon.browser_1e2af37c-ac20-4372-9039-c158b5670786 {
+.BrowserListView .BrowserListItemView .icon.browser_1e2af37c-ac20-4372-9039-c158b5670786,
+.BrowserListView .BrowserListItemView .icon.browser_99ea7579-6a37-4b6c-8134-1d9b24069ba6 {
   background-image: url('../images/installation-aquos60.png');
 }
-.BrowserListView .BrowserListItemView .icon.browser_1e2af37c-ac20-4372-9039-c158b5670786 .screenshot {
+.BrowserListView .BrowserListItemView .icon.browser_1e2af37c-ac20-4372-9039-c158b5670786 .screenshot,
+.BrowserListView .BrowserListItemView .icon.browser_99ea7579-6a37-4b6c-8134-1d9b24069ba6 .screenshot {
   height: 29px;
   left: 1px;
   top: 20px;
@@ -230,6 +232,15 @@ body {
   height: 48px;
   width: 27px;
   top: 10px;
+  left: 3px;
+}
+.BrowserListView .BrowserListItemView .icon.browser_3f0878b2-ea7d-49c3-bad4-85fac986a96b {
+  background-image: url('../images/installation-rpi.png');
+}
+.BrowserListView .BrowserListItemView .icon.browser_3f0878b2-ea7d-49c3-bad4-85fac986a96b .screenshot {
+  height: 44px;
+  width: 25px;
+  top: 3px;
   left: 3px;
 }
 .BrowserListView .BrowserListItemView .name {

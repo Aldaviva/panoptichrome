@@ -15,8 +15,8 @@
 
 		comparator: "index",
 
-		initialize: function(browser){
-			this.browser = browser;
+		initialize: function(models, options){
+			this.browser = options.browser;
 		},
 		
 		url: function(){

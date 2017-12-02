@@ -3,7 +3,7 @@
 	window.Browser = Backbone.Model.extend({
 		initialize: function(){
 			// _.bindAll(this, '_updateTabs');
-			this.tabs = new TabList(this);
+			this.tabs = new TabList(null, { browser: this });
 
 			// this.set('tabs', new TabList());
 			// this._updateTabs();
